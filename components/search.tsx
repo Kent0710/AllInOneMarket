@@ -25,7 +25,6 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toLowerCaseHelper } from "@/lib/utils";
 import { FlattenedProductType } from "@/lib/supabase/dbtypes";
-import { Clapperboard } from "lucide-react";
 
 export type Result = {
     id: string;
