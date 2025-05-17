@@ -2,13 +2,37 @@ import { getUserBookmarks } from "@/actions/getUserBookmarks";
 import ShopCardWithProduct from "@/components/shop-card-with-product";
 import { getBookmarkStatuses } from "@/actions/bookmarkShop";
 import { ShopType, ShopWithProductsType } from "@/lib/supabase/dbtypes";
+import { Bookmark } from "lucide-react";
 
 const BookmarksView = async () => {
     const bookmarkedShops = await getUserBookmarks();
-    const shopIds = bookmarkedShops.map(
-        (shop: ShopType) => shop.id
-    );
+    const shopIds = bookmarkedShops.map((shop: ShopType) => shop.id);
     const initialBookmarkStatuses = await getBookmarkStatuses(shopIds);
+
+    if (bookmarkedShops.length === 0) {
+        return (
+            <div className="flex justify-center items-center">
+                <div className="flex items-center gap-3 border-blue-500 rounded-xl px-8 py-4 border m-10">
+                    <Bookmark
+                        size={40}
+                        className="animate-pulse "
+                        fill="blue"
+                        color="blue"
+                    />
+                    <div>
+                        <h4 className="font-semibold text-blue-500 text-lg">
+                            {" "}
+                            You haven&apos;t bookmarked any shop{" "}
+                        </h4>
+                        <p className="text-neutral-500 text-sm">
+                            {" "}
+                            Start hitting the bookmark button to bookmark a shop.{" "}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-wrap gap-6 justify-center">
@@ -16,7 +40,7 @@ const BookmarksView = async () => {
                 <ShopCardWithProduct
                     key={shop.id}
                     shopId={shop.id}
-                    shoplogo={shop.logo || ''}
+                    shoplogo={shop.logo || ""}
                     shopName={shop.shopname}
                     shopDescription={shop.description}
                     productName={shop.products[0].productname}
