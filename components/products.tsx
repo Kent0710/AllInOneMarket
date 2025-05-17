@@ -39,7 +39,7 @@ const Products: React.FC<ProductsProps> = ({
                         sold={product.sold}
                         image={product.variantimage || ''}
                         shoplogo={product.shop_logo}
-                        price={product.price}
+                        price={product.price || 0}
                         productName={
                             (product.productname ||
                                 product.parent_productname ||
