@@ -31,7 +31,7 @@ export default async function Account() {
 }
 
 import { OrderWithDetails } from "@/lib/supabase/dbtypes";
-import { CheckoutCard } from "../checkouts/page";
+import CheckoutCard from "@/components/checkout-card";
 interface AccountTabContentProps {
     user: ExtendedUserType | null;
 }
