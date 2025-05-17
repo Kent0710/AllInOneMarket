@@ -18,9 +18,9 @@ const LikesView = async () => {
                             variantId={product.id}
                             title={product.shopname}
                             sold={product.sold}
-                            image={product.variantimage}
+                            image={product.variantimage || ''}
                             shoplogo={product.shop_logo}
-                            price={product.price}
+                            price={product.price || 0}
                             productName={
                                 (product.productname ||
                                     product.parent_productname ||

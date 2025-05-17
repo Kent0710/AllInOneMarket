@@ -114,13 +114,13 @@ export interface FlattenedProductType {
     shop_logo: string | StaticImport;
     isVariant: boolean;
     productname: string;
-    parent_product_id: UUID | null;
-    parent_productname: string | null;
+    parent_product_id: UUID;
+    parent_productname: string;
     description: string | null;
     productimage: string | StaticImport;
     quantity: number | null;
-    sold: number | null;
-    variantname?: string;
+    sold: number | 0;
+    variantname: string;
     price?: number;
     variantimage?: string | StaticImport;
     variant_images?: string[];

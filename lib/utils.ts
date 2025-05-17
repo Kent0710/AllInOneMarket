@@ -29,8 +29,10 @@ export function flattenProducts(shopAndProducts: ShopWithProductsType[]): Flatte
                 shop_id: shop.id,
                 shop_logo: shop.logo || '',
                 isVariant: false,
-                parent_product_id: null,
-                parent_productname: null,
+                parent_product_id: '',
+                parent_productname: '',
+                variantname : '',
+                sold : 0,
             };
 
             // Each variant is treated as a separate product
