@@ -1,8 +1,6 @@
-/* eslint-disable */
-
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState} from "react";
 import DataTable from "@/components/search";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
@@ -14,8 +12,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
 import { updateOrderStatus } from "@/actions/updateOrderStatus";
-import { supabaseClient } from "@/lib/supabase/client";
-import { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
+// import { supabaseClient } from "@/lib/supabase/client";
+// import { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 import { toast } from "sonner";
 
 type Order = {
@@ -33,6 +31,7 @@ interface AdminTableProps {
 
 const parseTime = (time: string): Date => {
     const [hourMin, modifier] = time.split(" ");
+    // eslint-disable-next-line prefer-const
     let [hours, minutes] = hourMin.split(":").map(Number);
     if (modifier === "PM" && hours !== 12) hours += 12;
     if (modifier === "AM" && hours === 12) hours = 0;
@@ -44,99 +43,99 @@ const AdminTable: React.FC<AdminTableProps> = ({ orders: initialOrders }) => {
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
     const [orderList, setOrderList] = useState<Order[]>(initialOrders);
 
-    // Set up real-time subscription
-    useEffect(() => {
-        const subscription = supabaseClient
-            .channel("shop-orders-channel")
-            .on(
-                "postgres_changes",
-                { event: "INSERT", schema: "public", table: "ShopOrders" },
-                async (
-                    payload: RealtimePostgresChangesPayload<{
-                        order_id: string;
-                    }>
-                ) => {
-                    console.log("INSERT detected:", payload);
-                    const newOrder = await fetchOrderDetails(
-                        payload.new.order_id
-                    );
-                    if (newOrder) {
-                        setOrderList((prev) => [...prev, newOrder]);
-                        toast.success("New order added");
-                    } else {
-                        toast.error("Failed to fetch new order details");
-                    }
-                }
-            )
-            .on(
-                "postgres_changes",
-                { event: "UPDATE", schema: "public", table: "ShopOrders" },
-                async (
-                    payload: RealtimePostgresChangesPayload<{
-                        order_id: string;
-                    }>
-                ) => {
-                    console.log("UPDATE detected:", payload);
-                    const updatedOrder = await fetchOrderDetails(
-                        payload.new.order_id
-                    );
-                    if (updatedOrder) {
-                        setOrderList((prev) =>
-                            prev.map((order) =>
-                                order.id === updatedOrder.id
-                                    ? updatedOrder
-                                    : order
-                            )
-                        );
-                        toast.success("Order updated");
-                    } else {
-                        toast.error("Failed to fetch updated order details");
-                    }
-                }
-            )
-            .on(
-                "postgres_changes",
-                { event: "DELETE", schema: "public", table: "ShopOrders" },
-                (
-                    payload: RealtimePostgresChangesPayload<{
-                        order_id: string;
-                    }>
-                ) => {
-                    console.log("DELETE detected:", payload);
-                    setOrderList((prev) =>
-                        prev.filter(
-                            (order) => order.id !== payload.old.order_id
-                        )
-                    );
-                    toast.success("Order deleted");
-                }
-            )
-            .subscribe();
+    // // Set up real-time subscription
+    // useEffect(() => {
+    //     const subscription = supabaseClient
+    //         .channel("shop-orders-channel")
+    //         .on(
+    //             "postgres_changes",
+    //             { event: "INSERT", schema: "public", table: "ShopOrders" },
+    //             async (
+    //                 payload: RealtimePostgresChangesPayload<{
+    //                     order_id: string;
+    //                 }>
+    //             ) => {
+    //                 console.log("INSERT detected:", payload);
+    //                 const newOrder = await fetchOrderDetails(
+    //                     payload.new.order_id
+    //                 );
+    //                 if (newOrder) {
+    //                     setOrderList((prev) => [...prev, newOrder]);
+    //                     toast.success("New order added");
+    //                 } else {
+    //                     toast.error("Failed to fetch new order details");
+    //                 }
+    //             }
+    //         )
+    //         .on(
+    //             "postgres_changes",
+    //             { event: "UPDATE", schema: "public", table: "ShopOrders" },
+    //             async (
+    //                 payload: RealtimePostgresChangesPayload<{
+    //                     order_id: string;
+    //                 }>
+    //             ) => {
+    //                 console.log("UPDATE detected:", payload);
+    //                 const updatedOrder = await fetchOrderDetails(
+    //                     payload.new.order_id
+    //                 );
+    //                 if (updatedOrder) {
+    //                     setOrderList((prev) =>
+    //                         prev.map((order) =>
+    //                             order.id === updatedOrder.id
+    //                                 ? updatedOrder
+    //                                 : order
+    //                         )
+    //                     );
+    //                     toast.success("Order updated");
+    //                 } else {
+    //                     toast.error("Failed to fetch updated order details");
+    //                 }
+    //             }
+    //         )
+    //         .on(
+    //             "postgres_changes",
+    //             { event: "DELETE", schema: "public", table: "ShopOrders" },
+    //             (
+    //                 payload: RealtimePostgresChangesPayload<{
+    //                     order_id: string;
+    //                 }>
+    //             ) => {
+    //                 console.log("DELETE detected:", payload);
+    //                 setOrderList((prev) =>
+    //                     prev.filter(
+    //                         (order) => order.id !== payload.old.order_id
+    //                     )
+    //                 );
+    //                 toast.success("Order deleted");
+    //             }
+    //         )
+    //         .subscribe();
 
-        return () => {
-            supabaseClient.removeChannel(subscription);
-        };
-    }, []); // Empty dependency array since supabaseClient is a singleton
+    //     return () => {
+    //         supabaseClient.removeChannel(subscription);
+    //     };
+    // }, []); // Empty dependency array since supabaseClient is a singleton
 
-    async function fetchOrderDetails(orderId: string): Promise<Order | null> {
-        try {
-            const response = await fetch(`/api/getOrder?orderId=${orderId}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-            if (!response.ok) {
-                console.error("Failed to fetch order:", response.statusText);
-                return null;
-            }
-            const order: Order = await response.json();
-            return order;
-        } catch (error) {
-            console.error("Error fetching order:", error);
-            return null;
-        }
-    }
+    // async function fetchOrderDetails(orderId: string): Promise<Order | null> {
+    //     try {
+    //         const response = await fetch(`/api/getOrder?orderId=${orderId}`, {
+    //             method: "GET",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //         });
+    //         if (!response.ok) {
+    //             console.error("Failed to fetch order:", response.statusText);
+    //             return null;
+    //         }
+    //         const order: Order = await response.json();
+    //         return order;
+    //     } catch (error) {
+    //         console.error("Error fetching order:", error);
+    //         return null;
+    //     }
+    // }
 
     const columns: ColumnDef<Order>[] = [
         {
@@ -181,10 +180,8 @@ const AdminTable: React.FC<AdminTableProps> = ({ orders: initialOrders }) => {
                                         ? {
                                               ...order,
                                               status:
-                                                  result.status
-                                                      .charAt(0)
-                                                      .toUpperCase() +
-                                                  result.status.slice(1),
+                                                  result.status!.charAt(0).toUpperCase() + result.status!.slice(1),
+                                                  
                                           }
                                         : order
                                 )
