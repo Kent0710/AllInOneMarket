@@ -1,9 +1,16 @@
 "use server";
 
+import { ProductType } from "@/lib/supabase/dbtypes";
 import { getSupabaseClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
-export async function getUser() {
+import {
+    ExtendedUserType,
+    ProductWithVariantsType,
+    VariantType,
+} from "@/lib/supabase/dbtypes";
+
+export async function getUser(): Promise<ExtendedUserType | null> {
     const supabase = await getSupabaseClient();
     const {
         data: { user },
@@ -25,7 +32,7 @@ export async function getUser() {
             .single();
 
         if (shopError && shopError.code !== "PGRST116") {
-            // PGRST116 is the error code for "no rows returned" which is fine - user might not have a shop
+            // PGRST116 is the error code for "no rows returned"
             console.error("Error fetching shop:", shopError);
         }
 
@@ -40,36 +47,49 @@ export async function getUser() {
             if (productsError) {
                 console.error("Error fetching products:", productsError);
             } else {
-                shop.products = products || [];
+                shop.products = (products || []) as ProductWithVariantsType[];
 
                 // For each product, fetch its variants
                 if (products && products.length > 0) {
-                    const productIds = products.map(product => product.id);
-                    
-                    const { data: variants, error: variantsError } = await supabase
-                        .from("Variant")
-                        .select("*")
-                        .in("product_id", productIds);
+                    const productIds = products.map((product : ProductType) => product.id);
+
+                    const { data: variants, error: variantsError } =
+                        await supabase
+                            .from("Variant")
+                            .select("*")
+                            .in("product_id", productIds);
 
                     if (variantsError) {
-                        console.error("Error fetching variants:", variantsError);
+                        console.error(
+                            "Error fetching variants:",
+                            variantsError
+                        );
                     } else {
                         // Associate variants with their respective products
-                        shop.products = products.map(product => ({
+                        shop.products = products.map((product : ProductType) => ({
                             ...product,
-                            variants: variants ? variants.filter(variant => variant.product_id === product.id) : []
-                        }));
+                            variants: variants
+                                ? variants.filter(
+                                      (variant: VariantType) =>
+                                          variant.product_id === product.id
+                                  )
+                                : [],
+                        })) as ProductWithVariantsType[];
                     }
                 }
             }
+
+            return {
+                ...user,
+                shop: shop || null,
+            } as ExtendedUserType;
         }
 
-        // Return user with shop data (if it exists)
         return {
             ...user,
-            shop: shop || null
-        };
+            shop: null,
+        } as ExtendedUserType;
     }
 
-    return user;
+    return null;
 }

@@ -4,7 +4,7 @@ import { GoHome } from "react-icons/go";
 import { IconType } from "react-icons/lib";
 import { PiStorefrontLight } from "react-icons/pi";
 import { PiShoppingCartSimple } from "react-icons/pi";
-import { useEffect, useMemo } from "react";
+import {  useMemo } from "react";
 import { CgMenuRight } from "react-icons/cg";
 import Link from "next/link";
 import { useIsMobileStore } from "@/store/useIsMobileStore";

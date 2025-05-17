@@ -4,10 +4,10 @@ import { useEffect } from "react";
 import { flattenProducts } from "@/lib/utils";
 import { useProductStore } from "@/store/useProductStore";
 import ProductCard from "./product-card";
-import { ShopWithProducts } from "@/lib/supabase/dbtypes";
+import { ShopWithProductsType } from "@/lib/supabase/dbtypes";
 
 interface ProductsProps {
-    shopAndProducts: ShopWithProducts[];
+    shopAndProducts: ShopWithProductsType[];
     initialLikeStatuses?: Record<string, boolean>;
 }
 

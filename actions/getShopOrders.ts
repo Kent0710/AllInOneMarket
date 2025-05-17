@@ -3,6 +3,20 @@
 import { getSupabaseClient } from "@/lib/supabase/server";
 import { getUser } from "./user/getUser";
 
+type ShopOrderResponse = {
+    order: {
+        id: number;
+        code: string;
+        status: string;
+        ordertime: string;
+    };
+    variant: {
+        variant: {
+            variantname: string;
+        };
+    };
+};
+
 export async function getShopOrders() {
     const user = await getUser();
 
@@ -14,7 +28,7 @@ export async function getShopOrders() {
         };
     }
 
-    if (!user.shop.id) {
+    if (!user.shop?.id) {
         return {
             success: false,
             orders: [],
@@ -46,7 +60,7 @@ export async function getShopOrders() {
 
     // return shopOrders;
 
-    const simplifiedOrders = shopOrders.map((item) => ({
+    const simplifiedOrders = shopOrders.map((item : ShopOrderResponse) => ({
         id: item.order.id,
         variantName: item.variant.variant.variantname,
         code: item.order.code,

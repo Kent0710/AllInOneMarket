@@ -52,5 +52,6 @@ export async function signup(values: z.infer<typeof authFormSchema>) {
 export async function signOut() {
     const supabase = await getSupabaseClient();
     const { error } = await supabase.auth.signOut();
+    console.error(error);
     redirect("/login");
 }

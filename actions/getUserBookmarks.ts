@@ -1,5 +1,6 @@
 "use server";
 
+import { ProductType, ShopType, VariantType } from "@/lib/supabase/dbtypes";
 import { getSupabaseClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -26,7 +27,7 @@ export async function getUserBookmarks() {
         return [];
     }
 
-    const shopIds = userBookmarks.map(bookmark => bookmark.shop_id);
+    const shopIds = userBookmarks.map((bookmark: { shop_id: string; }) => bookmark.shop_id);
 
     const { data: shops, error: shopsError } = await supabase
         .from("Shop")
@@ -48,7 +49,7 @@ export async function getUserBookmarks() {
         return shops;
     }
 
-    const productIds = products.map(product => product.id);
+    const productIds = products.map((product : ProductType) => product.id);
     const { data: variants, error: variantsError } = await supabase
         .from("Variant")
         .select("*")
@@ -59,12 +60,12 @@ export async function getUserBookmarks() {
         return shops;
     }
 
-    const shopsWithProducts = shops.map(shop => {
+    const shopsWithProducts = shops.map((shop : ShopType) => {
         const shopProducts = products
-            .filter(product => product.shop_id === shop.id)
-            .map(product => ({
+            .filter((product : ProductType) => product.shop_id === shop.id)
+            .map((product : ProductType) => ({
                 ...product,
-                variants: variants.filter(variant => variant.product_id === product.id),
+                variants: variants.filter((variant : VariantType) => variant.product_id === product.id),
             }));
 
         return {

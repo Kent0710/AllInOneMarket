@@ -156,7 +156,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
     });
 
     const [order, setOrder] = useState({});
-    const { flattenedProducts, setFlattenedProducts } = useProductStore();
+    const {  setFlattenedProducts } = useProductStore();
 
     const onSubmit = async () => {
         const order = await makeOrder({
@@ -260,6 +260,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
 };
 
 interface ConfirmedCheckoutProps {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     order: any;
     onClose: () => void;
     shopName : string;

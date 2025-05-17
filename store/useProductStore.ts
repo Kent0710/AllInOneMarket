@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import { FlattenedProduct } from "@/lib/supabase/dbtypes";
+import { FlattenedProductType } from "@/lib/supabase/dbtypes";
 
 interface ProductStore {
-    flattenedProducts: FlattenedProduct[] | null;
-    setFlattenedProducts: (products: FlattenedProduct[]) => void;
+    flattenedProducts: FlattenedProductType[] | null;
+    setFlattenedProducts: (products: FlattenedProductType[]) => void;
     updateProductLike: (productId: string, liked: boolean) => void;
 }
 

@@ -54,7 +54,7 @@ export async function bookmarkShop(shopId: string) {
 
 export async function getBookmarkStatus(shopId: string) {
     try {
-        const supabase = await createClient();
+        const supabase = await getSupabaseClient();
         const { data: { user } } = await supabase.auth.getUser();
 
         if (!user) {
@@ -96,7 +96,7 @@ export async function getBookmarkStatuses(shopIds: string[]) {
         }
 
         const bookmarkedMap = Object.fromEntries(shopIds.map(id => [id, false]));
-        bookmarks.forEach(bookmark => {
+        bookmarks.forEach((bookmark: { shop_id: string | number; }) => {
             bookmarkedMap[bookmark.shop_id] = true;
         });
 

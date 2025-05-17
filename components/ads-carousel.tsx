@@ -1,8 +1,6 @@
 "use client";
 
 import Autoplay from "embla-carousel-autoplay";
-import SampleImage from "../public/sample-image.jpg";
-import Image from "next/image";
 
 import {
     Carousel,

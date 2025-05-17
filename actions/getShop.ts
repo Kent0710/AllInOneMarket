@@ -1,5 +1,6 @@
 "use server";
 
+import { ProductType, VariantType } from "@/lib/supabase/dbtypes";
 import { getSupabaseClient } from "@/lib/supabase/server";
 
 export async function getShop(shopId: string) {
@@ -36,7 +37,7 @@ export async function getShop(shopId: string) {
         shop.products = products || [];
 
         if (products && products.length > 0) {
-            const productIds = products.map((product) => product.id);
+            const productIds = products.map((product : ProductType) => product.id);
 
             const { data: variants, error: variantsError } = await supabase
                 .from("Variant")
@@ -46,11 +47,11 @@ export async function getShop(shopId: string) {
             if (variantsError) {
                 console.error("Error fetching variants:", variantsError);
             } else {
-                shop.products = products.map((product) => ({
+                shop.products = products.map((product : ProductType) => ({
                     ...product,
                     variants: variants
                         ? variants.filter(
-                              (variant) => variant.product_id === product.id
+                              (variant : VariantType) => variant.product_id === product.id
                           )
                         : [],
                 }));

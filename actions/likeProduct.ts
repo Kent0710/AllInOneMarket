@@ -82,7 +82,7 @@ export async function getLikeStatuses(variantIds: string[]) {
     }
 
     const likedMap = Object.fromEntries(variantIds.map(id => [id, false]));
-    likes.forEach(like => {
+    likes.forEach((like: { variant_id: string }) => {
         likedMap[like.variant_id] = true;
     });
 

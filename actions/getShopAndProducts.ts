@@ -1,5 +1,6 @@
 "use server";
 
+import { ProductType, ShopType } from "@/lib/supabase/dbtypes";
 import { getSupabaseClient } from "@/lib/supabase/server";
 
 export async function getShopAndProducts() {
@@ -16,7 +17,7 @@ export async function getShopAndProducts() {
     }
 
     // Fetch all products for those shops
-    const shopIds = shops.map((shop) => shop.id);
+    const shopIds = shops.map((shop : ShopType) => shop.id);
     const { data: products, error: productsError } = await supabase
         .from("Product")
         .select("*")
@@ -28,7 +29,7 @@ export async function getShopAndProducts() {
     }
 
     // Fetch all variants for those products
-    const productIds = products.map((product) => product.id);
+    const productIds = products.map((product : ProductType) => product.id);
     const { data: variants, error: variantsError } = await supabase
         .from("Variant")
         .select("*")
@@ -40,12 +41,12 @@ export async function getShopAndProducts() {
     }
 
     // Associate products and variants
-    const shopsWithProducts = shops.map((shop) => {
+    const shopsWithProducts = shops.map((shop : ShopType) => {
         const shopProducts = products
-            .filter((product) => product.shop_id === shop.id)
-            .map((product) => ({
+            .filter((product : ProductType) => product.shop_id === shop.id)
+            .map((product : ProductType) => ({
                 ...product,
-                variants: variants.filter((v) => v.product_id === product.id),
+                variants: variants.filter((v: { product_id: string; }) => v.product_id === product.id),
             }));
 
         return {

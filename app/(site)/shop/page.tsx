@@ -9,7 +9,7 @@ export default async function Shop() {
                 Shops{" "}
             </h2>
 
-            <Suspense fallback={<ShopsLoading/>}>
+            <Suspense fallback={<ShopsLoading />}>
                 <ShopsView />
             </Suspense>
         </main>
@@ -20,14 +20,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const ShopsLoading = () => {
     return (
-          <div className="flex flex-wrap gap-6 justify-center">
-
-     {Array.from({ length: 6 }).map((_, i) => (
-                        <Skeleton
-                            key={i}
-                            className="w-full mx-[1.5rem] h-[22rem] rounded-xl"
-                        />
-                    ))}
+        <div className="flex flex-wrap gap-6 justify-center">
+            {Array.from({ length: 6 }).map((_, i) => (
+                <Skeleton
+                    key={i}
+                    className="w-full mx-[1.5rem] h-[22rem] rounded-xl"
+                />
+            ))}
         </div>
-    )
-}
+    );
+};

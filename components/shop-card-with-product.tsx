@@ -13,7 +13,7 @@ import { Store } from "lucide-react";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import AdsCarousel, { AdsCarouselItem } from "./ads-carousel";
 import BookmarkButton from "./bookmark-button";
-import { Variant } from "@/lib/supabase/dbtypes";
+import { VariantType } from "@/lib/supabase/dbtypes";
 
 interface ShopCardWithProductProps {
     shopId: string;
@@ -22,7 +22,7 @@ interface ShopCardWithProductProps {
     shopDescription: string | null;
     productName: string;
     productDescription: string | null;
-    variants: Variant[];
+    variants: VariantType[];
     initialBookmarked?: boolean;
 }
 

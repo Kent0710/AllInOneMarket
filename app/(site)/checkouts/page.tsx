@@ -6,6 +6,7 @@ import React from "react";
 import Link from "next/link";
 
 import NoImageFallback from "../../../public/noimage-fallback.jpg";
+import { OrderWithDetails } from "@/lib/supabase/dbtypes";
 
 export default async function Checkouts() {
     const { orders } = await getOrders();
@@ -18,7 +19,7 @@ export default async function Checkouts() {
             </h2>
 
             <section className="flex justify-center gap-6 flex-wrap">
-                {orders.map((order) => (
+                {(orders as OrderWithDetails[]).map((order) => (
                     <CheckoutCard
                         key={order.id}
                         productName={order.product.productname}
@@ -26,9 +27,8 @@ export default async function Checkouts() {
                         shopName={order.shop.shopname}
                         code={order.code}
                         status={order.status}
-                        quantity={order.quantity}
-                        ordertime={order.ordertime}
-                        variantimage={order.variant.variantimage}
+                        quantity={order.quantity.toString()}
+                        variantimage={order.variant.variantimage || ""}
                     />
                 ))}
             </section>
@@ -43,7 +43,6 @@ interface CheckoutCardProps {
     code: string;
     status: string;
     quantity: string;
-    ordertime: string;
     variantimage: string;
 }
 const CheckoutCard: React.FC<CheckoutCardProps> = ({
@@ -53,7 +52,6 @@ const CheckoutCard: React.FC<CheckoutCardProps> = ({
     code,
     status,
     quantity,
-    ordertime,
     variantimage,
 }) => {
     return (

@@ -4,6 +4,7 @@ import { getSupabaseClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { format } from "date-fns"; // For formatting datetime
 import { revalidatePath } from "next/cache";
+import { OrderType } from "@/lib/supabase/dbtypes";
 
 type MakeOrderParams = {
     productId: string;
@@ -25,6 +26,7 @@ function generateRandomCode(length: number): string {
 
 // Function to generate a unique code of specified length
 async function generateUniqueCode(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     supabase: any,
     length: number
 ): Promise<string> {
@@ -121,7 +123,7 @@ export async function makeOrder({
         };
     }
 
-    const { data: shopOrder, error: shopOrderError } = await supabase
+    const { error: shopOrderError } = await supabase
         .from("ShopOrders")
         .insert({ shop_id: shopId, order_id: order.id });
     if (shopOrderError) {
@@ -195,7 +197,7 @@ interface Product {
 
 interface OrderResult {
     success: boolean;
-    order?: any;
+    order?: OrderType;
     variant?: Variant;
     product?: Product;
     error?: string;

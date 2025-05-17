@@ -8,13 +8,19 @@ import ShopCard from "@/components/shop-card";
 import { getLikeStatuses } from "@/actions/likeProduct";
 import { HandHeart, Sparkles } from "lucide-react";
 import { IoFastFood } from "react-icons/io5";
+import {
+    ProductWithVariantsType,
+    ShopType,
+    ShopWithProductsType,
+    VariantType,
+} from "@/lib/supabase/dbtypes";
 
 const HomeView = async () => {
     const shopAndProducts = await getShopAndProducts();
     const variantIds = shopAndProducts
-        .flatMap((shop) => shop.products)
-        .flatMap((product) => product.variants)
-        .map((variant) => variant.id);
+        .flatMap((shop: ShopWithProductsType) => shop.products)
+        .flatMap((product: ProductWithVariantsType) => product.variants)
+        .map((variant: VariantType) => variant.id);
     const initialLikeStatuses = await getLikeStatuses(variantIds);
 
     return (
@@ -31,8 +37,8 @@ const HomeView = async () => {
                     </h2>
                     <p className="text-sm">
                         {" "}
-                        Skip the hassle — browse products in the app,
-                        place your order, and claim!
+                        Skip the hassle — browse products in the app, place your
+                        order, and claim!
                     </p>
                 </div>
             </section>
@@ -70,12 +76,12 @@ const HomeView = async () => {
                 </div>
                 <div>
                     <MarqueeDemo>
-                        {shopAndProducts.map((shop) => (
+                        {shopAndProducts.map((shop: ShopType) => (
                             <ShopCard
                                 key={shop.id}
                                 image={shop.logo || NoImageFallback}
                                 name={shop.shopname}
-                                description={shop.description}
+                                description={shop.description || ''}
                                 href={`/shop/${shop.id}`}
                             />
                         ))}

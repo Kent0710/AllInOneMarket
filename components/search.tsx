@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toLowerCaseHelper } from "@/lib/utils";
+import { FlattenedProductType } from "@/lib/supabase/dbtypes";
 
 export type Result = {
     id: string;
@@ -44,18 +45,22 @@ export const result: Result[] = [
     },
 ];
 
-export const columns: ColumnDef<Result>[] = [
+export const columns: ColumnDef<FlattenedProductType>[] = [
     {
         accessorKey: "name",
         header: "Name",
+        cell: ({ row }) =>
+            (row.original.productname || row.original.parent_productname || "Unnamed") +
+            (row.original.variantname ? ` - ${row.original.variantname}` : ""),
     },
     {
         accessorKey: "type",
         header: "Type",
+        cell: ({ row }) => (row.original.isVariant ? "variant" : "product"),
     },
 ];
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends { id: string; variantname?: string }, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     inputClassName?: string;
@@ -66,7 +71,7 @@ interface DataTableProps<TData, TValue> {
     href?: boolean;
 }
 
-export default function DataTable<TData, TValue>({
+export default function DataTable<TData extends { id: string; variantname?: string }, TValue>({
     columns,
     data,
     inputClassName,
@@ -139,7 +144,7 @@ export default function DataTable<TData, TValue>({
             </div>
             {isSearching && (
                 <div
-                    className={`rounded-md border absolute bg-white z-50 shadow-md ${tableClassName} `}
+                    className={`rounded-md border absolute bg-white z-50 shadow-md ${tableClassName}`}
                 >
                     <Table>
                         <TableHeader>
@@ -175,15 +180,11 @@ export default function DataTable<TData, TValue>({
                                                 key={cell.id}
                                                 onClick={() => {
                                                     if (href) {
+                                                        const variantParam = row.original.variantname
+                                                            ? `?variant=${toLowerCaseHelper(row.original.variantname)}`
+                                                            : "";
                                                         router.push(
-                                                            `/product/${
-                                                                cell.row
-                                                                    .original.id
-                                                            }?variant=${toLowerCaseHelper(
-                                                                cell.row
-                                                                    .original
-                                                                    .variantname
-                                                            )}`
+                                                            `/product/${row.original.id}${variantParam}`
                                                         );
                                                     }
                                                 }}

@@ -31,6 +31,7 @@ interface AdminTableProps {
 
 const parseTime = (time: string): Date => {
     const [hourMin, modifier] = time.split(" ");
+    // eslint-disable-next-line prefer-const
     let [hours, minutes] = hourMin.split(":").map(Number);
     if (modifier === "PM" && hours !== 12) hours += 12;
     if (modifier === "AM" && hours === 12) hours = 0;

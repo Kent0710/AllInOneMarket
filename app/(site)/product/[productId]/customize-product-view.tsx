@@ -6,8 +6,8 @@ import Image from "next/image";
 import { getSafeImageSrc } from "@/lib/utils";
 
 interface CustomizeProductViewProps {
-    selectedVariant: any;
-    product: any;
+    selectedVariant: VariantType;
+    product: ProductType;
 }
 const CustomizeProductView: React.FC<CustomizeProductViewProps> = ({
     selectedVariant,
@@ -88,6 +88,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, TicketCheck } from "lucide-react";
 import { makeCustomizedPancakeOrder } from "@/actions/makeOrder";
 import React from "react";
+import { ProductType, VariantType } from "@/lib/supabase/dbtypes";
 
 const formSchema = z.object({
     flavor: z.enum(["vanilla", "chocolate"], {
@@ -158,7 +159,7 @@ const PancakeForm : React.FC<PancakeFormProps> = ({
 
     async function onSubmit(values: FormValues) {
         console.log(values);
-        const res = await makeCustomizedPancakeOrder(values, shopId);
+        await makeCustomizedPancakeOrder(values, shopId);
     }
 
     return (
@@ -259,6 +260,7 @@ const PancakeForm : React.FC<PancakeFormProps> = ({
                                                 <FormControl>
                                                     <Checkbox
                                                         checked={field.value?.includes(
+                                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                                             fruit.id as any
                                                         )}
                                                         onCheckedChange={(

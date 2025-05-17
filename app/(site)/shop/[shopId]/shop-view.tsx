@@ -5,6 +5,7 @@ import { getSafeImageSrc } from "@/lib/utils";
 import AdsCarousel, { AdsCarouselItem } from "@/components/ads-carousel";
 import ProductCard from "@/components/product-card";
 import BookmarkButton from "@/components/bookmark-button";
+import { ProductWithVariantsType, VariantType } from "@/lib/supabase/dbtypes";
 
 interface ShopViewProps {
     shopId: string;
@@ -17,9 +18,9 @@ const ShopView: React.FC<ShopViewProps> = async ({ shopId }) => {
     }
 
     const variantIds = shop.products
-        .flatMap(product => product.variants)
-        .map(variant => variant.id)
-        .filter(id => id && id !== "undefined");
+        .flatMap((product : ProductWithVariantsType) => product.variants)
+        .map((variant : VariantType) => variant.id)
+        .filter((id : string) => id && id !== "undefined");
     const initialLikeStatuses = await getLikeStatuses(variantIds);
 
     return (
@@ -47,11 +48,11 @@ const ShopView: React.FC<ShopViewProps> = async ({ shopId }) => {
             {shop.products[0]?.variants?.length > 0 && (
                 <section>
                     <AdsCarousel hideControls={true} >
-                        {shop.products[0].variants.map((variant) => (
+                        {shop.products[0].variants.map((variant:VariantType) => (
                             <AdsCarouselItem key={variant.id}>
                                 <Image
                                     src={getSafeImageSrc(variant.variantimage)}
-                                    alt={variant.name || variant.variantname}
+                                    alt={variant.variantname}
                                     width={144}
                                     height={144}
                                     className="w-[25rem] h-[25rem] object-contain"
@@ -67,8 +68,8 @@ const ShopView: React.FC<ShopViewProps> = async ({ shopId }) => {
                     Products
                 </h2>
                 <div className="flex justify-center gap-6 flex-wrap">
-                    {shop.products.flatMap(product =>
-                        product.variants.map(variant => (
+                    {shop.products.flatMap((product : ProductWithVariantsType) =>
+                        product.variants.map((variant : VariantType) => (
                             <ProductCard
                                 key={variant.id}
                                 productId={product.id}
@@ -79,10 +80,10 @@ const ShopView: React.FC<ShopViewProps> = async ({ shopId }) => {
                                 shoplogo={shop.logo || ""}
                                 price={variant.price || 0}
                                 productName={
-                                    (product.name || product.productname || "Unnamed Product") +
-                                    (variant.name ? ` - ${variant.name}` : "")
+                                    (product.productname || "Unnamed Product") +
+                                    (variant.variantname ? ` - ${variant.variantname}` : "")
                                 }
-                                variantName={variant.name || variant.variantname || ""}
+                                variantName={variant.variantname || variant.variantname || ""}
                                 initialLiked={initialLikeStatuses[variant.id]}
                             />
                         ))

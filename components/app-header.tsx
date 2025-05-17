@@ -1,25 +1,25 @@
 "use client";
 
-import DataTable, { result } from "@/components/search";
-
+import DataTable from "@/components/search";
 import { Bookmark, Heart, TicketCheck, User } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { useIsMobileStore } from "@/store/useIsMobileStore";
 import { useProductStore } from "@/store/useProductStore";
-import React, { useEffect } from "react";
+import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
+import { SearchResultType } from "@/lib/supabase/dbtypes";
 
 const AppHeader = () => {
     const isMobile = useIsMobileStore();
-    const { flattenedProducts, setFlattenedProducts } = useProductStore();
-    const sanitizedProducts = Array.isArray(flattenedProducts)
+    const { flattenedProducts } = useProductStore();
+    const sanitizedProducts: SearchResultType[] = Array.isArray(flattenedProducts)
         ? flattenedProducts
               .filter((item) => item?.isVariant === true)
               .map((item) => ({
-                  id: item.product_id,
+                  id: item.id, // Use item.id instead of product_id
                   shop: item.shopname,
-                  variantname: item.variantname,
+                  variantname: item.variantname || "",
               }))
         : [];
 
@@ -32,12 +32,7 @@ const AppHeader = () => {
 
 export default AppHeader;
 
-type Product = {
-    shop: string;
-    productname: string;
-};
-
-const columns: ColumnDef<Product>[] = [
+const columns: ColumnDef<SearchResultType>[] = [
     {
         accessorKey: "shop",
         header: "Shop",
@@ -49,15 +44,14 @@ const columns: ColumnDef<Product>[] = [
 ];
 
 interface MobileHeaderProps {
-    sanitizedProducts: any;
+    sanitizedProducts: SearchResultType[];
 }
 const MobileHeader: React.FC<MobileHeaderProps> = ({ sanitizedProducts }) => {
     return (
         <header className="flex justify-between border-b py-2 flex-col items-center pt-4 ">
             <div />
             <h1 className="font-extrabold bg-gradient-to-tl from-blue-500 to-yellow-500 bg-clip-text text-transparent text-xl">
-                {" "}
-                AllInOneMarket{" "}
+                AllInOneMarket
             </h1>
             <DataTable
                 columns={columns}
@@ -65,15 +59,14 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ sanitizedProducts }) => {
                 inputClassName="w-[23rem] border-blue-500 border shadow-sm"
                 tableClassName="w-[23rem]"
                 searchColumn="variantname"
-                    href={true}
-
+                href={true}
             />
         </header>
     );
 };
 
 interface DesktopHeaderProps {
-    sanitizedProducts: any;
+    sanitizedProducts: SearchResultType[];
 }
 const DesktopHeader: React.FC<DesktopHeaderProps> = ({ sanitizedProducts }) => {
     return (
@@ -83,32 +76,27 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ sanitizedProducts }) => {
                     <Link href={"/home"}>Home</Link>
                 </li>
                 <Link href={"/shop"}>
-                    <li> Shops </li>
+                    <li>Shops</li>
                 </Link>
                 <Link href={"/product"}>
-                    <li> Products </li>
+                    <li>Products</li>
                 </Link>
-
                 <Link href={"/likes"}>
-                    <li> Likes </li>
+                    <li>Likes</li>
                 </Link>
-
-                <li> About </li>
-
+                <li>About</li>
                 <Link href={"/terms"}>
-                    <li> Terms </li>
+                    <li>Terms</li>
                 </Link>
-
                 <Link href={"/privacy"}>
-                    <li> Privacy </li>
+                    <li>Privacy</li>
                 </Link>
-                <li> Contact </li>
+                <li>Contact</li>
             </ul>
 
             <section className="flex items-center justify-center space-x-20">
                 <h1 className="font-extrabold bg-gradient-to-tl from-blue-500 to-yellow-400 bg-clip-text text-transparent text-xl">
-                    {" "}
-                    AllInOneMarket{" "}
+                    AllInOneMarket
                 </h1>
                 <DataTable
                     columns={columns}
@@ -118,14 +106,12 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ sanitizedProducts }) => {
                     searchColumn="variantname"
                     href={true}
                 />
-
                 <div className="flex space-x-3">
                     <Link href={"/bookmarks"}>
                         <Button size={"icon"} variant={"link"}>
                             <Bookmark className="size-5 text-neutral-700" />
                         </Button>
                     </Link>
-
                     <Link href={"/likes"}>
                         <Button size={"icon"} variant={"link"}>
                             <Heart className="size-5 text-neutral-700" />

@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     }
 
     const user = await getUser();
-    if (!user || !user.shop.id) {
+    if (!user || !user.shop?.id) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

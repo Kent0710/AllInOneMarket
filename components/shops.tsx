@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import ShopCardWithProduct from "./shop-card-with-product";
-import { ShopWithProducts } from "@/lib/supabase/dbtypes";
+import {  ShopWithProductsType } from "@/lib/supabase/dbtypes";
 
 interface ShopsProps {
-    shopAndProducts: ShopWithProducts[];
+    shopAndProducts: ShopWithProductsType[];
     initialBookmarkStatuses?: Record<string, boolean>;
 }
 
@@ -21,7 +21,7 @@ const Shops: React.FC<ShopsProps> = ({
                 <ShopCardWithProduct
                     key={shop.id}
                     shopId={shop.id}
-                    shoplogo={shop.logo}
+                    shoplogo={shop.logo || ''}
                     shopName={shop.shopname}
                     shopDescription={shop.description}
                     productName={shop.products[0]?.productname || "No Product"}

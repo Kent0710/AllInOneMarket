@@ -17,6 +17,7 @@ import { getProduct } from "@/actions/getProduct";
 
 import { redirect } from "next/navigation";
 import CustomizeProductView from "./customize-product-view";
+import { VariantType } from "@/lib/supabase/dbtypes";
 
 export default async function ProductPage({
     searchParams,
@@ -30,7 +31,7 @@ export default async function ProductPage({
     const product = await getProduct(productId);
 
     const selectedVariant = product.variants.find(
-        (v) =>
+        (v: { variantname: string; }) =>
             toLowerCaseHelper(v.variantname) === toLowerCaseHelper(variantName)
     );
 
@@ -55,7 +56,7 @@ export default async function ProductPage({
             <div className="flex flex-wrap md:flex-nowrap">
                 <section className="w-full md:w-1/3 mx-14 md:mx-0 md:mr-14">
                     <AdsCarousel className="h-[30rem]">
-                        {product.variants.map((variant) => {
+                        {product.variants.map((variant: VariantType) => {
                             const hasSingleImage = !!variant.variantimage;
                             const multipleImages = variant.variant_images || [];
 
@@ -120,7 +121,7 @@ export default async function ProductPage({
                             type="always"
                         >
                             <div className="flex gap-3 flex-wrap justify-end">
-                                {product.variants.map((variant) => (
+                                {product.variants.map((variant:VariantType) => (
                                     <VariantCard
                                         key={variant.id}
                                         image={variant.variantimage}

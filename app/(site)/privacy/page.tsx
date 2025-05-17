@@ -11,7 +11,7 @@ export default function PrivacyPolicyPage() {
             <section className="space-y-6">
                 <p>
                     Thank you for trusting us with your information. Your
-                    privacy matters, and we're committed to protecting it. This
+                    privacy matters, and we&apos;re committed to protecting it. This
                     Privacy Policy explains how we collect, use, and protect
                     your data when you use our services.
                 </p>

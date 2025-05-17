@@ -1,5 +1,6 @@
 "use server";
 
+import { ProductType, ShopType, VariantType } from "@/lib/supabase/dbtypes";
 import { getSupabaseClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -29,7 +30,7 @@ export async function getUserLikes() {
         return [];
     }
 
-    const variantIds = userLikes.map((like) => like.variant_id);
+    const variantIds = userLikes.map((like: { variant_id: string; }) => like.variant_id);
 
     const { data: variants, error: variantsError } = await supabase
         .from("Variant")
@@ -41,7 +42,7 @@ export async function getUserLikes() {
         return [];
     }
 
-    const productIds = variants.map((variant) => variant.product_id);
+    const productIds = variants.map((variant : VariantType) => variant.product_id);
     const { data: products, error: productsError } = await supabase
         .from("Product")
         .select("*")
@@ -52,7 +53,7 @@ export async function getUserLikes() {
         return [];
     }
 
-    const shopIds = products.map((product) => product.shop_id);
+    const shopIds = products.map((product : ProductType) => product.shop_id);
     const { data: shops, error: shopsError } = await supabase
         .from("Shop")
         .select("*")
@@ -63,13 +64,13 @@ export async function getUserLikes() {
         return [];
     }
 
-    const shopsWithProducts = shops.map((shop) => {
+    const shopsWithProducts = shops.map((shop : ShopType) => {
         const shopProducts = products
-            .filter((product) => product.shop_id === shop.id)
-            .map((product) => ({
+            .filter((product : ProductType) => product.shop_id === shop.id)
+            .map((product : ProductType) => ({
                 ...product,
                 variants: variants.filter(
-                    (variant) => variant.product_id === product.id
+                    (variant : VariantType) => variant.product_id === product.id
                 ),
             }));
 
