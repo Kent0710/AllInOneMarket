@@ -16,7 +16,7 @@ const ProductsView = async () => {
     const initialLikeStatuses = await getLikeStatuses(variantIds);
 
     return (
-        <div>
+        <div >
             <Products
                 shopAndProducts={shopAndProducts}
                 initialLikeStatuses={initialLikeStatuses}
