@@ -7,6 +7,7 @@ import Link from "next/link";
 
 import NoImageFallback from "../../../public/noimage-fallback.jpg";
 import { OrderWithDetails } from "@/lib/supabase/dbtypes";
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
 
 export default async function Checkouts() {
     const { orders } = await getOrders();
@@ -19,7 +20,7 @@ export default async function Checkouts() {
             </h2>
 
             <section className="flex justify-center gap-6 flex-wrap">
-                {(orders as OrderWithDetails[]).map((order) => (
+                {(orders as OrderWithDetails[]).map((order ) => (
                     <CheckoutCard
                         key={order.id}
                         productName={order.product.productname}
@@ -43,7 +44,7 @@ interface CheckoutCardProps {
     code: string;
     status: string;
     quantity: string;
-    variantimage: string;
+    variantimage: string | StaticImport;
 }
 const CheckoutCard: React.FC<CheckoutCardProps> = ({
     productName,
