@@ -48,16 +48,15 @@ interface MobileHeaderProps {
 }
 const MobileHeader: React.FC<MobileHeaderProps> = ({ sanitizedProducts }) => {
     return (
-        <header className="flex justify-between border-b py-2 flex-col items-center pt-4 ">
-            <div />
-            <h1 className="font-extrabold bg-gradient-to-tl from-blue-500 to-yellow-500 bg-clip-text text-transparent text-xl">
+        <header className="flex justify-center gap-3 border-b py-2 items-center pt-4 ">
+            <h1 className="font-extrabold bg-gradient-to-tl from-blue-500 to-yellow-500 bg-clip-text text-transparent text-md">
                 AllInOneMarket
             </h1>
             <DataTable
                 columns={columns}
                 data={sanitizedProducts}
-                inputClassName="w-[23rem] border-blue-500 border shadow-sm"
-                tableClassName="w-[23rem]"
+                inputClassName="w-[20rem] border-blue-500 border shadow-sm "
+                tableClassName="w-[20rem]"
                 searchColumn="variantname"
                 href={true}
             />

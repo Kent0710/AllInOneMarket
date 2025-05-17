@@ -39,7 +39,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     initialLiked,
 }) => {
     return (
-        <Card className="w-fit py-3 h-[29rem] md:h-[35rem]">
+        <Card className="w-fit py-3 h-[31rem] md:h-[35rem]">
             <Link
                 href={`/product/${productId}?variant=${toLowerCaseHelper(
                     variantName

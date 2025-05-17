@@ -10,28 +10,72 @@ export default async function Account() {
     const user = await getUser();
 
     return (
-        <main className="mx-[2rem] md:mx-[10rem]">
+        <main className="mx-[2rem] md:mx-[15rem]">
             <Tabs defaultValue="account">
                 <TabsList>
                     <TabsTrigger value="account">Account</TabsTrigger>
-                    <TabsTrigger value="shop">Shop</TabsTrigger>
+                    {user?.shop && <TabsTrigger value="shop">Shop</TabsTrigger>}
                 </TabsList>
 
                 <TabsContent value="account">
-                    {user?.user_metadata.email || "No email available"}
-                    <form>
-                        <Button type="submit" formAction={signOut}>
-                            Sign out
-                        </Button>
-                    </form>
+                    <AccountTabContent user={user} />
                 </TabsContent>
-                <TabsContent value="shop">
-                    <ShopTabContent user={user} />
-                </TabsContent>
+                {user?.shop && (
+                    <TabsContent value="shop">
+                        <ShopTabContent user={user} />
+                    </TabsContent>
+                )}
             </Tabs>
         </main>
     );
 }
+
+import { OrderWithDetails } from "@/lib/supabase/dbtypes";
+import { CheckoutCard } from "../checkouts/page";
+interface AccountTabContentProps {
+    user: ExtendedUserType | null;
+}
+const AccountTabContent: React.FC<AccountTabContentProps> = async ({
+    user,
+}) => {
+    const { orders } = await getOrders();
+
+    return (
+        <div className="mt-6">
+            <h4>
+                <span className="font-semibold">Email: </span>{" "}
+                {user?.user_metadata.email ||
+                    user?.email ||
+                    "No email available"}
+            </h4>
+
+            <section className="flex justify-center gap-6 flex-wrap m-10 border p-10 rounded-xl">
+                {orders.length === 0 ? (
+                    <> No orders </>
+                ) : (
+                    (orders as OrderWithDetails[]).map((order) => (
+                        <CheckoutCard
+                            key={order.id}
+                            productName={order.product.productname}
+                            variantName={order.variant.variantname}
+                            shopName={order.shop.shopname}
+                            code={order.code}
+                            status={order.status}
+                            quantity={order.quantity.toString()}
+                            variantimage={order.variant.variantimage || ""}
+                        />
+                    ))
+                )}
+            </section>
+
+            <form>
+                <Button type="submit" formAction={signOut}>
+                    Sign out
+                </Button>
+            </form>
+        </div>
+    );
+};
 
 import {
     Table,
@@ -43,6 +87,8 @@ import {
 } from "@/components/ui/table";
 import AdsCarousel, { AdsCarouselItem } from "@/components/ads-carousel";
 import { ExtendedUserType } from "@/lib/supabase/dbtypes";
+import React from "react";
+import { getOrders } from "@/actions/getOrders";
 
 interface ShopTabContentProps {
     user: ExtendedUserType | null;
@@ -50,14 +96,23 @@ interface ShopTabContentProps {
 
 const ShopTabContent: React.FC<ShopTabContentProps> = ({ user }) => {
     if (!user || !user.shop) {
-        return <div>You do not have a shop. Create one to get started!</div>;
+        return (
+            <div className="text-center mt-6 m-10 p-10 rounded-xl border">
+                You do not have a shop.{" "}
+            </div>
+        );
     }
 
     const { shop } = user;
     const products = shop.products || [];
 
     if (products.length === 0) {
-        return <div>Your shop has no products. Add some products to display them here!</div>;
+        return (
+            <div>
+                Your shop has no products. Add some products to display them
+                here!
+            </div>
+        );
     }
 
     return (
@@ -79,7 +134,8 @@ const ShopTabContent: React.FC<ShopTabContentProps> = ({ user }) => {
                 <section className="flex items-center flex-col">
                     <h4 className="text-2xl font-semibold">{shop.shopname}</h4>
                     <p className="text-neutral-500">
-                        {shop.description || "Your shop does not have any description."}
+                        {shop.description ||
+                            "Your shop does not have any description."}
                     </p>
                 </section>
             </div>
@@ -89,7 +145,9 @@ const ShopTabContent: React.FC<ShopTabContentProps> = ({ user }) => {
                     Product
                 </h2>
                 <section className="w-full">
-                    <h4 className="text-2xl font-semibold">{products[0].productname}</h4>
+                    <h4 className="text-2xl font-semibold">
+                        {products[0].productname}
+                    </h4>
                     <p className="text-neutral-500">
                         {products[0].description || "No description available"}
                     </p>
@@ -126,7 +184,9 @@ const ShopTabContent: React.FC<ShopTabContentProps> = ({ user }) => {
                             key={variant.variantname}
                             className="w-36 flex items-center flex-col gap-3"
                         >
-                            <p className="font-semibold">{variant.variantname}</p>
+                            <p className="font-semibold">
+                                {variant.variantname}
+                            </p>
                             <Image
                                 src={variant.variantimage || NoImageFallback}
                                 width={144}
@@ -148,7 +208,9 @@ const ShopTabContent: React.FC<ShopTabContentProps> = ({ user }) => {
                         {products[0].variants.map((variant) => (
                             <AdsCarouselItem key={variant.variantname}>
                                 <Image
-                                    src={variant.variantimage || NoImageFallback}
+                                    src={
+                                        variant.variantimage || NoImageFallback
+                                    }
                                     alt={variant.variantname}
                                     width={244}
                                     height={244}

@@ -46,7 +46,7 @@ interface CheckoutCardProps {
     quantity: string;
     variantimage: string | StaticImport;
 }
-const CheckoutCard: React.FC<CheckoutCardProps> = ({
+export const CheckoutCard: React.FC<CheckoutCardProps> = ({
     productName,
     variantName,
     shopName,
