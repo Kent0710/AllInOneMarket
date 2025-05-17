@@ -16,7 +16,7 @@ const BookmarksView = async () => {
                 <ShopCardWithProduct
                     key={shop.id}
                     shopId={shop.id}
-                    shoplogo={shop.logo}
+                    shoplogo={shop.logo || ''}
                     shopName={shop.shopname}
                     shopDescription={shop.description}
                     productName={shop.products[0].productname}

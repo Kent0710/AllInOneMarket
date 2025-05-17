@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState} from "react";
+import { useMemo, useState } from "react";
 import DataTable from "@/components/search";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,7 @@ import { toast } from "sonner";
 
 type Order = {
     id: string;
-    username?: string; 
+    username?: string;
     variantName: string;
     code: string;
     status: string;
@@ -180,8 +180,10 @@ const AdminTable: React.FC<AdminTableProps> = ({ orders: initialOrders }) => {
                                         ? {
                                               ...order,
                                               status:
-                                                  result.status!.charAt(0).toUpperCase() + result.status!.slice(1),
-                                                  
+                                                  result
+                                                      .status!.charAt(0)
+                                                      .toUpperCase() +
+                                                  result.status!.slice(1),
                                           }
                                         : order
                                 )

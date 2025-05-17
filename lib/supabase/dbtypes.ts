@@ -111,7 +111,7 @@ export interface FlattenedProductType {
     id: UUID;
     shopname: string;
     shop_id: UUID;
-    shop_logo: string | StaticImport ;
+    shop_logo: string | StaticImport;
     isVariant: boolean;
     productname: string;
     parent_product_id: UUID | null;
@@ -122,7 +122,7 @@ export interface FlattenedProductType {
     sold: number | null;
     variantname?: string;
     price?: number;
-    variantimage?: string | null;
+    variantimage?: string | StaticImport;
     variant_images?: string[];
     liked?: boolean;
 }
