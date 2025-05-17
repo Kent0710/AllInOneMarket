@@ -1,12 +1,13 @@
 import { getShopAndProducts } from "@/actions/getShopAndProducts";
 import { getBookmarkStatuses } from "@/actions/bookmarkShop";
 import Shops from "@/components/shops";
+import { Shop } from "@/lib/supabase/dbtypes";
 
 const ShopsView = async () => {
     const shopAndProducts = await getShopAndProducts();
     const shopIds = shopAndProducts
-        .map((shop) => shop.id)
-        .filter((id) => id && id !== "undefined");
+        .map((shop : Shop) => shop.id)
+        .filter((id : string) => id && id !== "undefined");
     const initialBookmarkStatuses = await getBookmarkStatuses(shopIds);
 
     return (

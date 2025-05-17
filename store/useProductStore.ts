@@ -1,30 +1,21 @@
 import { create } from "zustand";
-
-interface Product {
-    id: string;
-    parent_product_id: string;
-    liked?: boolean;
-    [key: string]: any;
-}
+import { FlattenedProduct } from "@/lib/supabase/dbtypes";
 
 interface ProductStore {
-    flattenedProducts: Product[] | null;
-    setFlattenedProducts: (products: Product[]) => void;
+    flattenedProducts: FlattenedProduct[] | null;
+    setFlattenedProducts: (products: FlattenedProduct[]) => void;
     updateProductLike: (productId: string, liked: boolean) => void;
 }
 
 export const useProductStore = create<ProductStore>((set) => ({
     flattenedProducts: null,
-    setFlattenedProducts: (products) =>
-        set({ flattenedProducts: products }),
+    setFlattenedProducts: (products) => set({ flattenedProducts: products }),
     updateProductLike: (productId, liked) =>
         set((state) => {
             if (!state.flattenedProducts) return state;
             return {
                 flattenedProducts: state.flattenedProducts.map((product) =>
-                    product.parent_product_id === productId
-                        ? { ...product, liked }
-                        : product
+                    product.id === productId ? { ...product, liked } : product
                 ),
             };
         }),

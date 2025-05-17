@@ -9,7 +9,6 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Link from "next/link";
-import NoImageFallback from "../public/noimage-fallback.jpg";
 import { getSafeImageSrc, toLowerCaseHelper } from "@/lib/utils";
 import LikeProduct from "./like-product";
 import ShareProduct from "./share-product";

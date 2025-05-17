@@ -29,7 +29,8 @@ const ShareProduct: React.FC<ShareProductProps> = ({ url }) => {
 
             toast.success("Link copied to clipboard!");
         } catch (err) {
-            toast.error("Failed to copy the link.");
+            toast.error("Failed to copy the link.",);
+            console.error(err)
         }
     };
 

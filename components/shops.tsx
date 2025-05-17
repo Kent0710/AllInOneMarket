@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import ShopCardWithProduct from "./shop-card-with-product";
+import { ShopWithProducts } from "@/lib/supabase/dbtypes";
 
 interface ShopsProps {
-    shopAndProducts: any[];
+    shopAndProducts: ShopWithProducts[];
     initialBookmarkStatuses?: Record<string, boolean>;
 }
 
@@ -12,7 +13,7 @@ const Shops: React.FC<ShopsProps> = ({
     shopAndProducts: shopAndProductsData,
     initialBookmarkStatuses = {},
 }) => {
-    const [shopAndProducts, setShopAndProducts] = useState(shopAndProductsData);
+    const [shopAndProducts] = useState(shopAndProductsData);
 
     return (
         <>
@@ -21,11 +22,15 @@ const Shops: React.FC<ShopsProps> = ({
                     key={shop.id}
                     shopId={shop.id}
                     shoplogo={shop.logo}
-                    shopName={shop.name || shop.shopname}
+                    shopName={shop.shopname}
                     shopDescription={shop.description}
-                    productName={shop.products[0]?.name || shop.products[0]?.productname || "No Product"}
-                    productDescription={shop.products[0]?.description || "No description available"}
+                    productName={shop.products[0]?.productname || "No Product"}
+                    productDescription={
+                        shop.products[0]?.description ||
+                        "No description available"
+                    }
                     initialBookmarked={initialBookmarkStatuses[shop.id]}
+                    variants={shop.products[0]?.variants || []}
                 />
             ))}
         </>
