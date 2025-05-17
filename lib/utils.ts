@@ -27,27 +27,40 @@ export function flattenProducts(shopAndProducts: ShopWithProductsType[]): Flatte
                 ...product,
                 shopname: shop.shopname,
                 shop_id: shop.id,
-                shop_logo: shop.logo || '',
+                shop_logo: shop.logo || "",
                 isVariant: false,
-                parent_product_id: '',
-                parent_productname: '',
-                variantname : '',
-                sold : 0,
+                parent_product_id: "",
+                parent_productname: "",
+                variantname: "",
+                sold: product.sold || 0,
             };
 
-            // Each variant is treated as a separate product
-            const variantProducts: FlattenedProductType[] = product.variants.map((variant) => ({
-                ...variant,
-                productname: product.productname,
-                parent_product_id: product.id,
-                parent_productname: product.productname,
-                description: product.description,
-                productimage: product.productimage,
-                shopname: shop.shopname,
-                shop_id: shop.id,
-                shop_logo: shop.logo || '',
-                isVariant: product.productname === "Pancake Skewowrz" ? false : true,
-            }));
+            // Select all variants by default, but only one for Pancake Skewowrz
+            const variantProducts: FlattenedProductType[] = product.productname === "Pancake Skewowrz" && product.variants.length > 0
+                ? [{
+                    ...product.variants[0],
+                    productname: product.productname,
+                    parent_product_id: product.id,
+                    parent_productname: product.productname,
+                    description: product.description,
+                    productimage: product.productimage,
+                    shopname: shop.shopname,
+                    shop_id: shop.id,
+                    shop_logo: shop.logo || "",
+                    isVariant: false,
+                }]
+                : product.variants.map((variant) => ({
+                    ...variant,
+                    productname: product.productname,
+                    parent_product_id: product.id,
+                    parent_productname: product.productname,
+                    description: product.description,
+                    productimage: product.productimage,
+                    shopname: shop.shopname,
+                    shop_id: shop.id,
+                    shop_logo: shop.logo || "",
+                    isVariant: true,
+                }));
 
             return [baseProduct, ...variantProducts];
         })
