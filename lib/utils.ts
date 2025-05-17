@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge";
 
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import NoImageFallback from "../public/noimage-fallback.jpg";
-import { ShopWithProducts, FlattenedProduct } from "@/lib/supabase/dbtypes";
+import { ShopWithProductsType, FlattenedProductType } from "@/lib/supabase/dbtypes";
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -19,22 +19,22 @@ export function toLowerCaseHelper(text: string): string {
 }
 
 // lib/flattenProducts.ts
-export function flattenProducts(shopAndProducts: ShopWithProducts[]): FlattenedProduct[] {
+export function flattenProducts(shopAndProducts: ShopWithProductsType[]): FlattenedProductType[] {
     return shopAndProducts.flatMap((shop) =>
         shop.products.flatMap((product) => {
             // The base product (non-variant)
-            const baseProduct: FlattenedProduct = {
+            const baseProduct: FlattenedProductType = {
                 ...product,
                 shopname: shop.shopname,
                 shop_id: shop.id,
-                shop_logo: shop.logo,
+                shop_logo: shop.logo || '',
                 isVariant: false,
                 parent_product_id: null,
                 parent_productname: null,
             };
 
             // Each variant is treated as a separate product
-            const variantProducts: FlattenedProduct[] = product.variants.map((variant) => ({
+            const variantProducts: FlattenedProductType[] = product.variants.map((variant) => ({
                 ...variant,
                 productname: product.productname,
                 parent_product_id: product.id,
@@ -43,7 +43,7 @@ export function flattenProducts(shopAndProducts: ShopWithProducts[]): FlattenedP
                 productimage: product.productimage,
                 shopname: shop.shopname,
                 shop_id: shop.id,
-                shop_logo: shop.logo,
+                shop_logo: shop.logo || '',
                 isVariant: product.productname === "Pancake Skewowrz" ? false : true,
             }));
 
