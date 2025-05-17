@@ -3,7 +3,7 @@ import AdminView from "./admin-view";
 
 export default async function AdminPage() {
     return (
-        <div className="h-screen">
+        <div >
             <Suspense fallback={<>loading</>}>
                 <AdminView />
             </Suspense>

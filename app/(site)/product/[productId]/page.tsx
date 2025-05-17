@@ -42,7 +42,7 @@ export default async function ProductPage({
         return redirect(`/product/${productId}?variant=${defaultVariant}`);
     }
 
-    if (variantName.includes("customize")) {
+    if (variantName.includes("stack")) {
         return (
             <CustomizeProductView
                 selectedVariant={selectedVariant}

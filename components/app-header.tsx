@@ -1,7 +1,7 @@
 "use client";
 
 import DataTable from "@/components/search";
-import { Bookmark, Heart, TicketCheck, User } from "lucide-react";
+import { Bookmark, Heart, Search, TicketCheck, User } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { useIsMobileStore } from "@/store/useIsMobileStore";
@@ -13,7 +13,9 @@ import { SearchResultType } from "@/lib/supabase/dbtypes";
 const AppHeader = () => {
     const isMobile = useIsMobileStore();
     const { flattenedProducts } = useProductStore();
-    const sanitizedProducts: SearchResultType[] = Array.isArray(flattenedProducts)
+    const sanitizedProducts: SearchResultType[] = Array.isArray(
+        flattenedProducts
+    )
         ? flattenedProducts
               .filter((item) => item?.isVariant === true)
               .map((item) => ({
@@ -48,18 +50,24 @@ interface MobileHeaderProps {
 }
 const MobileHeader: React.FC<MobileHeaderProps> = ({ sanitizedProducts }) => {
     return (
-        <header className="flex justify-center gap-3 border-b py-2 items-center pt-4 ">
-            <h1 className="font-extrabold bg-gradient-to-tl from-blue-500 to-yellow-500 bg-clip-text text-transparent text-md">
+        <header className="flex flex-wrap gap-3 md:flex-nowrap md:gap-0 justify-center border-b py-2 items-center pt-4 ">
+            <h1 className="font-extrabold bg-gradient-to-tl from-blue-500 to-yellow-500 bg-clip-text text-transparent md:text-md">
                 AllInOneMarket
             </h1>
-            <DataTable
-                columns={columns}
-                data={sanitizedProducts}
-                inputClassName="w-[20rem] border-blue-500 border shadow-sm "
-                tableClassName="w-[20rem]"
-                searchColumn="variantname"
-                href={true}
-            />
+            <div className="flex gap-3 items-center">
+                <DataTable
+                    columns={columns}
+                    data={sanitizedProducts}
+                    inputClassName="w-[20rem] border-blue-500 border shadow-sm "
+                    tableClassName="w-[20rem]"
+                    searchColumn="variantname"
+                    href={true}
+                />
+                <Search
+                    className="bg-neutral-200/30 rounded-xl p-2 text-blue-600"
+                    size={40}
+                />
+            </div>
         </header>
     );
 };

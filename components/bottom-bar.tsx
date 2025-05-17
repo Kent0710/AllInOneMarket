@@ -4,19 +4,35 @@ import { GoHome } from "react-icons/go";
 import { IconType } from "react-icons/lib";
 import { PiStorefrontLight } from "react-icons/pi";
 import { PiShoppingCartSimple } from "react-icons/pi";
-import {  useMemo } from "react";
+import { useMemo, useState } from "react";
 import { CgMenuRight } from "react-icons/cg";
 import Link from "next/link";
 import { useIsMobileStore } from "@/store/useIsMobileStore";
 import { Loader2, LogOut, User } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTransition } from "react";
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Bookmark, Heart, TicketCheck } from "lucide-react";
+import { Info, FileText, Shield, Mail } from "lucide-react";
 
 const BottomBar = () => {
     const isMobile = useIsMobileStore();
     const [loadingItem, setLoadingItem] = useState<string | null>(null);
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
+    const path = usePathname();
 
     const navs = useMemo(
         () => [
@@ -25,7 +41,7 @@ const BottomBar = () => {
                 text: "Home",
                 href: "/home",
             },
-                    {
+            {
                 icon: TicketCheck,
                 text: "Checkouts",
                 href: "/checkouts",
@@ -56,14 +72,18 @@ const BottomBar = () => {
     return (
         <div className="fixed bottom-0 left-0 w-full rounded-t-3xl bg-gradient-to-r from-indigo-500 to-blue-500 text-white mt-2 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] border-t border-neutral-300 z-50 h-[4rem]">
             <nav className="h-full flex items-center">
-                <ul className="flex justify-around mx-6 w-full ">
+                <ul className="flex justify-around mx-6 w-full items-center ">
                     {navs.map((nav) => (
                         <li key={nav.text}>
                             <button
                                 onClick={() =>
                                     handleNavigation(nav.href, nav.text)
                                 }
-                                className={`flex flex-col items-center justify-center `}
+                                className={`flex flex-col items-center justify-center ${
+                                    path === nav.href
+                                        ? "bg-white text-blue-500 rounded-xl w-17 shadow-md p-1"
+                                        : ""
+                                }`}
                             >
                                 {loadingItem === nav.text && isPending ? (
                                     <Loader2 className="animate-spin" />
@@ -91,26 +111,6 @@ interface BottomBarIconProps {
 const BottomBarIcon: React.FC<BottomBarIconProps> = ({ icon: Icon }) => {
     return <Icon size={25} />;
 };
-
-import {
-    Sheet,
-    SheetContent,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from "@/components/ui/sheet";
-
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-} from "@/components/ui/accordion";
-
-import { Bookmark, Heart, TicketCheck } from "lucide-react";
-
-import { Info, FileText, Shield, Mail } from "lucide-react";
-import { useState } from "react";
 
 const Menu = () => {
     const [open, setOpen] = useState(false);

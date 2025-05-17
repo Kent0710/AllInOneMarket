@@ -2,6 +2,7 @@
 
 import { getSupabaseClient } from "@/lib/supabase/server";
 import { getUser } from "./user/getUser";
+import { redirect } from "next/navigation";
 
 type ShopOrderResponse = {
     order: {
@@ -57,8 +58,6 @@ export async function getShopOrders() {
     }
 
     if (shopOrders.length === 0) return [];
-
-    // return shopOrders;
 
     const simplifiedOrders = shopOrders.map((item : ShopOrderResponse) => ({
         id: item.order.id,
