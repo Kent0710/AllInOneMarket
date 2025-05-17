@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Package } from "lucide-react";
 import Link from "next/link";
-import NoImageFallback from "../../../public/noimage-fallback.jpg";
+import NoImageFallback from '../public/noimage-fallback.jpg'
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 
 interface CheckoutCardProps {
