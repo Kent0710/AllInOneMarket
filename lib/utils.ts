@@ -39,7 +39,7 @@ export function flattenProducts(shopAndProducts: ShopWithProductsType[]): Flatte
             const variantProducts: FlattenedProductType[] = product.productname === "Pancake Skewowrz" && product.variants.length > 0
                 ? [{
                     ...product.variants[0],
-                    productname: product.productname,
+                    productname: 'Pancake Skewowrz',
                     parent_product_id: product.id,
                     parent_productname: product.productname,
                     description: product.description,

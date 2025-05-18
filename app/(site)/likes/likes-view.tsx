@@ -10,10 +10,10 @@ const LikesView = async () => {
     if (likedShops.length === 0) {
         return (
             <div className="flex justify-center items-center">
-                <div className="flex items-center gap-3 border-red-500 rounded-xl px-8 py-4 border m-10">
+                <div className="flex flex-wrap justify-center items-center gap-3 border-red-500 rounded-xl px-8 py-4 border m-10">
                     <Heart size={40} className="animate-pulse " fill="red" color="red" />
                     <div>
-                        <h4 className="font-semibold text-red-500 text-lg"> You haven&apos;t liked any product </h4>
+                        <h4 className="font-semibold text-red-500 text-lg"> No liked product.</h4>
                         <p className="text-neutral-500 text-sm">
                             {" "}
                             Start hitting the heart button to like a product.{" "}

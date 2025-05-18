@@ -37,16 +37,19 @@ const Products: React.FC<ProductsProps> = ({
                         variantId={product.id}
                         title={product.shopname}
                         sold={product.sold}
-                        image={product.variantimage || ''}
+                        image={product.variantimage || ""}
                         shoplogo={product.shop_logo}
                         price={product.price || 0}
                         productName={
-                            (product.productname ||
-                                product.parent_productname ||
-                                "Unnamed Product") +
-                            (product.variantname
-                                ? ` - ${product.variantname}`
-                                : "")
+                            product.productname === "Pancake Skewowrz" ||
+                            product.parent_productname === "Pancake Skewowrz"
+                                ? "Pancake Skewowrz"
+                                : (product.productname ||
+                                      product.parent_productname ||
+                                      "Unnamed Product") +
+                                  (product.variantname
+                                      ? ` - ${product.variantname}`
+                                      : "")
                         }
                         variantName={product.variantname}
                         initialLiked={initialLikeStatuses[product.id]}

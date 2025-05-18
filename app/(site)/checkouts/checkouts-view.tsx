@@ -9,7 +9,7 @@ const CheckoutsView = async () => {
     if (orders.length === 0) {
         return (
             <div className="flex justify-center items-center">
-                <div className="flex items-center gap-3 border-blue-500 rounded-xl px-8 py-4 border m-10">
+                <div className="flex flex-wrap justify-center items-center gap-3 border-blue-500 rounded-xl px-8 py-4 border m-10">
                     <TicketCheck
                         size={40}
                         className="animate-pulse "
@@ -18,8 +18,7 @@ const CheckoutsView = async () => {
                     />
                     <div>
                         <h4 className="font-semibold text-blue-500 text-lg">
-                            {" "}
-                            You don&apos;t have any checkouts
+                            No checkouts
                         </h4>
                         <p className="text-neutral-500 text-sm">
                             {" "}

@@ -50,7 +50,7 @@ const HomeView = async () => {
             />
 
             <section className="py-6 border-b ">
-                <div className="flex flex-col justify-center mx-[5rem] mb-10">
+                <div className="flex flex-col justify-center  mb-10">
                     <h2 className="text-center font-semibold  text-xl">
                         Your Next Favorite Finds
                     </h2>

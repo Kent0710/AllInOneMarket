@@ -12,7 +12,7 @@ const BookmarksView = async () => {
     if (bookmarkedShops.length === 0) {
         return (
             <div className="flex justify-center items-center">
-                <div className="flex items-center gap-3 border-blue-500 rounded-xl px-8 py-4 border m-10">
+                <div className="flex flex-wrap justify-center items-center gap-3 border-blue-500 rounded-xl px-8 py-4 border ">
                     <Bookmark
                         size={40}
                         className="animate-pulse "
@@ -20,11 +20,10 @@ const BookmarksView = async () => {
                         color="blue"
                     />
                     <div>
-                        <h4 className="font-semibold text-blue-500 text-lg">
-                            {" "}
-                            You haven&apos;t bookmarked any shop{" "}
+                        <h4 className="font-semibold text-blue-500 text-lg text-center">
+                            No bookmarked shop
                         </h4>
-                        <p className="text-neutral-500 text-sm">
+                        <p className="text-neutral-500 text-sm text-center">
                             {" "}
                             Start hitting the bookmark button to bookmark a shop.{" "}
                         </p>

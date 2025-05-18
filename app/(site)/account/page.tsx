@@ -89,6 +89,7 @@ import AdsCarousel, { AdsCarouselItem } from "@/components/ads-carousel";
 import { ExtendedUserType } from "@/lib/supabase/dbtypes";
 import React from "react";
 import { getOrders } from "@/actions/getOrders";
+import TableRowForm from "./tablerow-form";
 
 interface ShopTabContentProps {
     user: ExtendedUserType | null;
@@ -176,6 +177,18 @@ const ShopTabContent: React.FC<ShopTabContentProps> = ({ user }) => {
 
             <div>
                 <h2 className="text-center font-extrabold text-lg whitespace-nowrap mb-3">
+                    Edit
+                </h2>
+
+                <section className="flex flex-wrap gap-6">
+                    {products[0].variants.map((variant) => (
+                        <TableRowForm variant={variant} key={variant.id} />
+                    ))}
+                </section>
+            </div>
+
+            <div>
+                <h2 className="text-center font-extrabold text-lg whitespace-nowrap mb-3">
                     Product Images
                 </h2>
                 <div className="flex gap-12 flex-wrap">
@@ -220,11 +233,6 @@ const ShopTabContent: React.FC<ShopTabContentProps> = ({ user }) => {
                         ))}
                     </AdsCarousel>
                 </div>
-            </div>
-
-            <div className="space-x-3 place-self-center my-6 mt-12">
-                <Button variant={"outline"}>Discard changes</Button>
-                <Button>Save changes</Button>
             </div>
         </div>
     );
