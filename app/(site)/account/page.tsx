@@ -180,7 +180,7 @@ const ShopTabContent: React.FC<ShopTabContentProps> = ({ user }) => {
                     Edit
                 </h2>
 
-                <section className="flex flex-wrap gap-6">
+                <section className="flex flex-wrap gap-6 justify-center">
                     {products[0].variants.map((variant) => (
                         <TableRowForm variant={variant} key={variant.id} />
                     ))}
