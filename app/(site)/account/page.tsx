@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import NoImageFallback from "../../../public/noimage-fallback.jpg";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
-import { Input } from "@/components/ui/input";
 
 export default async function Account() {
     const user = await getUser();
@@ -91,6 +90,9 @@ import React from "react";
 import { getOrders } from "@/actions/getOrders";
 import TableRowForm from "./tablerow-form";
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Terminal } from "lucide-react";
+
 interface ShopTabContentProps {
     user: ExtendedUserType | null;
 }
@@ -118,6 +120,15 @@ const ShopTabContent: React.FC<ShopTabContentProps> = ({ user }) => {
 
     return (
         <div className="flex flex-col gap-12">
+            <Alert>
+                <Terminal className="h-4 w-4" />
+                <AlertTitle>About the images</AlertTitle>
+                <AlertDescription>
+                    For policy purposes in development, uploading of images is turned off. 
+                    Send your images via google drive.
+                </AlertDescription>
+            </Alert>
+
             <div className="flex gap-3 items-center flex-col">
                 <h2 className="text-center font-extrabold text-lg whitespace-nowrap mb-3">
                     Shop
@@ -128,8 +139,8 @@ const ShopTabContent: React.FC<ShopTabContentProps> = ({ user }) => {
                         width={144}
                         height={144}
                         alt={`${shop.shopname} logo`}
+                        className="rounded-full"
                     />
-                    <Input type="file" />
                 </section>
 
                 <section className="flex items-center flex-col">
@@ -191,7 +202,7 @@ const ShopTabContent: React.FC<ShopTabContentProps> = ({ user }) => {
                 <h2 className="text-center font-extrabold text-lg whitespace-nowrap mb-3">
                     Product Images
                 </h2>
-                <div className="flex gap-12 flex-wrap">
+                <div className="flex gap-12 flex-wrap justify-center">
                     {products[0].variants.map((variant) => (
                         <div
                             key={variant.variantname}
@@ -206,7 +217,6 @@ const ShopTabContent: React.FC<ShopTabContentProps> = ({ user }) => {
                                 height={144}
                                 alt={`${variant.variantname} image`}
                             />
-                            <Input type="file" />
                         </div>
                     ))}
                 </div>
