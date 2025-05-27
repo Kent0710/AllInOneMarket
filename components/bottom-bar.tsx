@@ -26,7 +26,6 @@ import {
 } from "@/components/ui/accordion";
 import { Bookmark, Heart, TicketCheck } from "lucide-react";
 import { Info, FileText, Shield, Mail } from "lucide-react";
-import { getUser } from "@/actions/user/getUser";
 import { getUsernameFromCookies } from "@/actions/getUsernameFromCookies";
 
 const BottomBar = () => {
