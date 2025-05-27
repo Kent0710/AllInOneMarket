@@ -25,6 +25,8 @@ const AppHeader = () => {
               }))
         : [];
 
+
+    
     return isMobile ? (
         <MobileHeader sanitizedProducts={sanitizedProducts} />
     ) : (
@@ -50,15 +52,16 @@ interface MobileHeaderProps {
 }
 const MobileHeader: React.FC<MobileHeaderProps> = ({ sanitizedProducts }) => {
     return (
-        <header className="flex flex-wrap gap-3 md:flex-nowrap md:gap-0 justify-center border-b py-2 items-center pt-4 ">
-            <h1 className="font-extrabold bg-gradient-to-tl from-blue-500 to-yellow-500 bg-clip-text text-transparent md:text-md">
-                AllInOneMarket
+        <header className="flex flex-wrap  md:flex-nowrap md:gap-0 justify-center border-b py-2 items-center pt-4 bg-blue-400 shadow-lg rounded-b-xl ">
+            {/* <h1 className="font-extrabold bg-gradient-to-tl from-blue-500 to-yellow-500 bg-clip-text text-transparent md:text-md"> */}
+            <h1 className="font-extrabold text-xl md:text-md text-white">
+                AllInOneMarket 
             </h1>
             <div className="flex gap-3 items-center">
                 <DataTable
                     columns={columns}
                     data={sanitizedProducts}
-                    inputClassName="w-[20rem] border-blue-500 border shadow-sm "
+                    inputClassName="w-[20rem] focus-visible:bg-white "
                     tableClassName="w-[20rem]"
                     searchColumn="variantname"
                     href={true}
@@ -77,7 +80,7 @@ interface DesktopHeaderProps {
 }
 const DesktopHeader: React.FC<DesktopHeaderProps> = ({ sanitizedProducts }) => {
     return (
-        <header className="py-8 bg-white ">
+        <header className="py-8 bg-blue-400 rounded-b-3xl shadow-lg text-white">
             <ul className="flex space-x-6 text-xs justify-center">
                 <li>
                     <Link href={"/home"}>Home</Link>
@@ -102,14 +105,15 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ sanitizedProducts }) => {
             </ul>
 
             <section className="flex items-center justify-center space-x-20">
-                <h1 className="font-extrabold bg-gradient-to-tl from-blue-500 to-yellow-400 bg-clip-text text-transparent text-xl">
+                {/* <h1 className="font-extrabold bg-gradient-to-tl from-blue-500 to-yellow-400 bg-clip-text text-transparent text-xl"> */}
+                <h1 className="font-extrabold  text-xl">
                     AllInOneMarket
                 </h1>
                 <DataTable
                     columns={columns}
                     data={sanitizedProducts}
                     inputClassName="w-[40rem]"
-                    tableClassName="w-[40rem]"
+                    tableClassName="w-[40rem] text-neutral-700"
                     searchColumn="variantname"
                     href={true}
                 />

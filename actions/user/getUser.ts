@@ -23,7 +23,7 @@ export async function getUser(): Promise<ExtendedUserType | null> {
     }
 
     // If we have a user, check if they have a shop
-    if (user) {
+    if (user && user.email) {
         // Fetch the user's shop
         const { data: shop, error: shopError } = await supabase
             .from("Shop")

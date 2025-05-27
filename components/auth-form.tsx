@@ -102,7 +102,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ className }) => {
                                 />
                             </FormControl>
                             <FormDescription>
-                                Must be at least 5 characters long.
+                                Must be at least 6 characters long.
                             </FormDescription>
                             <FormMessage />
                         </FormItem>

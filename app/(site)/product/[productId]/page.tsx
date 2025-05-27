@@ -51,8 +51,9 @@ export default async function ProductPage({
         );
     }
 
+
     return (
-        <main className="mx-[0rem] md:mx-[5rem] flex flex-col gap-12 mt-3">
+        <main className="mx-[0rem] md:mx-[5rem] flex flex-col gap-12 mt-3 bg-white/40 backdrop-blur-3xl rounded-xl border border-white shadow-md p-5">
             <div className="flex flex-wrap md:flex-nowrap">
                 <section className="w-full md:w-1/3 mx-14 md:mx-0 md:mr-14">
                     <AdsCarousel className="h-[30rem]">
@@ -125,8 +126,9 @@ export default async function ProductPage({
                                     <VariantCard
                                         key={variant.id}
                                         image={variant.variantimage}
-                                        title={variant.variantname}
+                                        name={variant.variantname}
                                         productId={productId}
+                                        chosenVariantName={variantName}
                                     />
                                 ))}
                             </div>
@@ -149,7 +151,7 @@ export default async function ProductPage({
                 <Image
                     src={product.shop.logo || NoImageFallback}
                     alt={product.shop.shopname}
-                    className="object-contain w-28 h-28"
+                    className="object-contain w-28 h-28 rounded-full"
                     width={144}
                     height={144}
                 />
@@ -179,19 +181,21 @@ export default async function ProductPage({
 
 interface VariantCardProps {
     image: string | StaticImport;
-    title: string;
+    name: string;
     productId: string;
+    chosenVariantName : string;
 }
 const VariantCard: React.FC<VariantCardProps> = ({
     image,
-    title,
+    name,
     productId,
+    chosenVariantName,
 }) => {
     return (
         <Link
-            href={`/product/${productId}?variant=${toLowerCaseHelper(title)}`}
+            href={`/product/${productId}?variant=${toLowerCaseHelper(name)}`}
         >
-            <Card className="w-fit py-2">
+            <Card className={`w-fit py-2 ${name.replace(' ', '').toLowerCase() === chosenVariantName && 'border border-dashed bg-white/40 backdrop-blur-3xl border-blue-500 text-blue-500'}`}>
                 <CardContent className="flex gap-3 items-center">
                     <Image
                         src={getSafeImageSrc(image)}
@@ -200,7 +204,7 @@ const VariantCard: React.FC<VariantCardProps> = ({
                         width={144}
                         height={144}
                     />
-                    <p className="font-semibold"> {title} </p>
+                    <p className="font-semibold"> {name} </p>
                 </CardContent>
             </Card>
         </Link>

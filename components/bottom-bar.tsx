@@ -4,7 +4,7 @@ import { GoHome } from "react-icons/go";
 import { IconType } from "react-icons/lib";
 import { PiStorefrontLight } from "react-icons/pi";
 import { PiShoppingCartSimple } from "react-icons/pi";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CgMenuRight } from "react-icons/cg";
 import Link from "next/link";
 import { useIsMobileStore } from "@/store/useIsMobileStore";
@@ -26,6 +26,8 @@ import {
 } from "@/components/ui/accordion";
 import { Bookmark, Heart, TicketCheck } from "lucide-react";
 import { Info, FileText, Shield, Mail } from "lucide-react";
+import { getUser } from "@/actions/user/getUser";
+import { getUsernameFromCookies } from "@/actions/getUsernameFromCookies";
 
 const BottomBar = () => {
     const isMobile = useIsMobileStore();
@@ -152,6 +154,17 @@ const Menu = () => {
         },
     ];
 
+    const [username, setUsername] = useState('');
+    useEffect(()=>{
+        async function getUsername() {
+            const username = await getUsernameFromCookies();
+            console.log(username);
+            setUsername(username);
+        };
+
+        getUsername();
+    },[])
+
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
@@ -178,8 +191,8 @@ const Menu = () => {
                                             className="rounded-xl bg-neutral-100 p-2"
                                             size={40}
                                         />
-                                        <h2 className="font-semibold">
-                                            John Doe
+                                        <h2 className="font-semibold w-[7rem] truncate">
+                                             {username}
                                         </h2>
                                     </div>
                                 </AccordionTrigger>

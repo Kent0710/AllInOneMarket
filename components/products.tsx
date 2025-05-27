@@ -6,6 +6,8 @@ import { useProductStore } from "@/store/useProductStore";
 import ProductCard from "./product-card";
 import { ShopWithProductsType } from "@/lib/supabase/dbtypes";
 
+import FallbackImage from '../public/noimage-fallback.jpg'
+
 interface ProductsProps {
     shopAndProducts: ShopWithProductsType[];
     initialLikeStatuses?: Record<string, boolean>;
@@ -37,7 +39,7 @@ const Products: React.FC<ProductsProps> = ({
                         variantId={product.id}
                         title={product.shopname}
                         sold={product.sold}
-                        image={product.variantimage || ""}
+                        image={product.variant_images ? product.variant_images[0] : FallbackImage}
                         shoplogo={product.shop_logo}
                         price={product.price || 0}
                         productName={

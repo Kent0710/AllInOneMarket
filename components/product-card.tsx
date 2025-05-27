@@ -45,7 +45,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     const [isClicked, setIsClicked] = useState(false);
 
     return (
-        <Card className={`w-[11.5rem] md:w-[16.5rem] py-3 h-[29rem] md:h-[35rem] ${isClicked && 'bg-neutral-200/50'}`}>
+        <Card className={`w-[11.5rem] border border-white md:w-[16.5rem] py-3 h-[29rem] md:h-[35rem] bg-white/40 backdrop-blur-3xl ${isClicked && 'bg-neutral-200/50'}`}>
             {!isClicked ? (
                 <>
                     <Link
@@ -61,7 +61,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                                     alt={title}
                                     width={50}
                                     height={50}
-                                    className="object-contain"
+                                    className="object-contain rounded-full"
                                 />
                                 <CardTitle>{title}</CardTitle>
                             </div>
