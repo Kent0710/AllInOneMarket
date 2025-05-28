@@ -36,7 +36,9 @@ const CustomizeProductView: React.FC<CustomizeProductViewProps> = ({
                     <div className="flex justify-between">
                         <div>
                             <h4 className="text-2xl font-semibold">
-                                {selectedVariant.variantname}
+                                {selectedVariant.variantname.includes(
+                                    "Stack"
+                                ) && "Pancake Skewowrz"}
                             </h4>
                             <p className="text-neutral-500">
                                 {product.description ||
@@ -52,11 +54,39 @@ const CustomizeProductView: React.FC<CustomizeProductViewProps> = ({
                         ₱{selectedVariant?.price ?? "0"}.00
                     </p>
 
-
                     <PancakeForm shopId={product.shop.id} />
                 </section>
             </div>
 
+            <div className="flex items-center justify-center gap-9 flex-wrap md:flex-nowrap my-10">
+                {/* Shop   */}
+                <Image
+                    src={product.shop.logo || NoImageFallback}
+                    alt={product.shop.shopname}
+                    className="object-contain w-28 h-28 rounded-full"
+                    width={144}
+                    height={144}
+                />
+                <section>
+                    <h4 className="text-lg font-semibold mb-3 whitespace-nowrap">
+                        {product.shop.shopname}
+                    </h4>
+                    <Link href={`/shop/${product.shop.id}`}>
+                        <Button variant={"special"}>
+                            <Store />
+                            View shop
+                        </Button>
+                    </Link>
+                </section>
+
+                <section>
+                    <h5 className="font-semibold">About</h5>
+                    <p>
+                        {product.shop.description ||
+                            "This shop does not have a description."}
+                    </p>
+                </section>
+            </div>
         </div>
     );
 };
@@ -85,10 +115,11 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { Loader2, TicketCheck } from "lucide-react";
+import { Loader2, Store, TicketCheck } from "lucide-react";
 import { makeCustomizedPancakeOrder } from "@/actions/makeOrder";
 import React from "react";
 import { ProductType, VariantType } from "@/lib/supabase/dbtypes";
+import Link from "next/link";
 
 const formSchema = z.object({
     flavor: z.enum(["vanilla", "chocolate"], {
@@ -109,11 +140,9 @@ const formSchema = z.object({
 export type FormValues = z.infer<typeof formSchema>;
 
 interface PancakeFormProps {
-    shopId : string;
+    shopId: string;
 }
-const PancakeForm : React.FC<PancakeFormProps> = ({
-    shopId
-}) => {
+const PancakeForm: React.FC<PancakeFormProps> = ({ shopId }) => {
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -337,10 +366,7 @@ const PancakeForm : React.FC<PancakeFormProps> = ({
                     )}
                 />
 
-                <Button
-                    type="submit"
-                    disabled={form.formState.isSubmitting}
-                >
+                <Button type="submit" disabled={form.formState.isSubmitting}>
                     {form.formState.isSubmitting ? (
                         <>
                             <Loader2 className="animate-spin" />

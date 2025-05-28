@@ -1,5 +1,6 @@
 'use server'
 
+import { getSupabaseClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers"
 
 export async function getUsernameFromCookies() {
@@ -9,7 +10,15 @@ export async function getUsernameFromCookies() {
     if (username) {
         const usernameValue = username.value;
         return usernameValue;
-    }
+    } else {
+        const supabase = await getSupabaseClient();
 
-    return '';
+        const {data : {user}, error} = await supabase.auth.getUser();
+
+        if (!user && error) {
+            return "No username"
+        }
+
+        return user.email.replace('@gmail.com', '')
+    }
 }
