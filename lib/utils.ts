@@ -43,7 +43,7 @@ export function flattenProducts(shopAndProducts: ShopWithProductsType[]): Flatte
                     parent_product_id: product.id,
                     parent_productname: product.productname,
                     description: product.description,
-                    productimage: product.productimage,
+                    productimage: product.product_images[0],
                     shopname: shop.shopname,
                     shop_id: shop.id,
                     shop_logo: shop.logo || "",

@@ -20,15 +20,17 @@ const CustomizeProductView: React.FC<CustomizeProductViewProps> = ({
                 <section className="w-full md:w-1/3 mx-14 md:mx-0 md:mr-14">
                     {/* image carousel  */}
                     <AdsCarousel className="h-[30rem]">
-                        <AdsCarouselItem>
-                            <Image
-                                src={getSafeImageSrc(NoImageFallback)}
-                                alt="noimagefallback"
-                                width={144}
-                                height={144}
-                                className="object-contain w-[20rem]"
-                            />
-                        </AdsCarouselItem>
+                        {product.product_images.map((productimage) => (
+                            <AdsCarouselItem key={productimage}>
+                                <Image
+                                    src={getSafeImageSrc(productimage)}
+                                    alt="noimagefallback"
+                                    width={144}
+                                    height={144}
+                                    className="object-contain w-[20rem]"
+                                />
+                            </AdsCarouselItem>
+                        ))}
                     </AdsCarousel>
                 </section>
                 {/* product details and form  */}

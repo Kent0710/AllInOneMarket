@@ -39,6 +39,7 @@ export interface ProductType {
     productname: string;
     description: string | null;
     productimage: string | StaticImport;
+    product_images : string[];
     shop_id: UUID | null;
     shop: ShopType;
     quantity: number | null;
