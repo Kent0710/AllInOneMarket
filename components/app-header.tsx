@@ -26,9 +26,9 @@ const AppHeader = () => {
         : [];
 
     return isMobile ? (
-        <DesktopHeader sanitizedProducts={sanitizedProducts} />
-    ) : (
         <MobileHeader sanitizedProducts={sanitizedProducts} />
+    ) : (
+        <DesktopHeader sanitizedProducts={sanitizedProducts} />
     );
 };
 
