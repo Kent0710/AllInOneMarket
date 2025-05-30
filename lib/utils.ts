@@ -51,7 +51,7 @@ export function flattenProducts(shopAndProducts: ShopWithProductsType[]): Flatte
                 }]
                 : product.variants.map((variant) => ({
                     ...variant,
-                    productname: product.productname,
+                    productname: product.productname + ' - ' + variant.variantname,
                     parent_product_id: product.id,
                     parent_productname: product.productname,
                     description: product.description,

@@ -45,9 +45,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
     const [isClicked, setIsClicked] = useState(false);
 
     return (
-        <Card className={`w-[11.5rem] border border-white md:w-[16.5rem] py-3 h-[29rem] md:h-[35rem] bg-white/40 backdrop-blur-3xl ${isClicked && 'bg-neutral-200/50'}`}>
+        <Card
+            className={`w-[11.5rem] border border-white md:w-[16.5rem] py-3  h-[29rem] md:h-[35rem] bg-white/40 backdrop-blur-3xl ${
+                isClicked && "bg-neutral-200/50"
+            }`}
+        >
             {!isClicked ? (
-                <>
+                <div className="flex flex-col justify-between h-full">
                     <Link
                         href={`/product/${productId}?variant=${toLowerCaseHelper(
                             variantName
@@ -72,7 +76,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                                 alt={`${title} image`}
                                 width={100}
                                 height={100}
-                                className="w-[20rem] object-contain my-3"
+                                className="w-[20rem] md:h-[20rem] object-contain my-3"
                             />
                             <h4 className="font-semibold line-clamp-2">
                                 {productName}
@@ -96,13 +100,23 @@ const ProductCard: React.FC<ProductCardProps> = ({
                                 initialLiked={initialLiked}
                             />
                         </div>
-                        <Button>Order</Button>
+                        <Link
+                            href={`/product/${productId}?variant=${toLowerCaseHelper(
+                                variantName
+                            )}`}
+                            onClick={() => setIsClicked(true)}
+                        >
+                            <Button>Order</Button>
+                        </Link>
                     </CardFooter>
-                </>
+                </div>
             ) : (
                 <div className="flex justify-center items-center flex-col h-full p-4 mb-10">
                     <LoadingDots />
-                    <h4 className="font-semibold text-neutral-600"> Good Choice! </h4>
+                    <h4 className="font-semibold text-neutral-600">
+                        {" "}
+                        Good Choice!{" "}
+                    </h4>
                     <p className="text-center text-neutral-500 text-sm">
                         {" "}
                         Please wait while we are getting the product&apos;s
