@@ -33,7 +33,7 @@ interface AuthFormProps {
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({ className }) => {
-    const [authType, setAuthType] = useState<"login" | "signup">("login");
+    const [authType, setAuthType] = useState<"login" | "signup">("signup");
     const [serverError, setServerError] = useState("");
 
     const form = useForm<z.infer<typeof authFormSchema>>({

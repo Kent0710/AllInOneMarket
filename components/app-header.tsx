@@ -1,7 +1,7 @@
 "use client";
 
 import DataTable from "@/components/search";
-import { Bookmark, Heart, Search, TicketCheck, User } from "lucide-react";
+import { Bookmark, Heart, Search, TicketCheck, User, Lock } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { useIsMobileStore } from "@/store/useIsMobileStore";
@@ -25,12 +25,10 @@ const AppHeader = () => {
               }))
         : [];
 
-
-    
     return isMobile ? (
-        <MobileHeader sanitizedProducts={sanitizedProducts} />
-    ) : (
         <DesktopHeader sanitizedProducts={sanitizedProducts} />
+    ) : (
+        <MobileHeader sanitizedProducts={sanitizedProducts} />
     );
 };
 
@@ -55,7 +53,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ sanitizedProducts }) => {
         <header className="flex flex-wrap  md:flex-nowrap md:gap-0 justify-center border-b py-2 items-center pt-4 bg-blue-400 shadow-lg rounded-b-xl ">
             {/* <h1 className="font-extrabold bg-gradient-to-tl from-blue-500 to-yellow-500 bg-clip-text text-transparent md:text-md"> */}
             <h1 className="font-extrabold text-xl md:text-md text-white">
-                AllInOneMarket 
+                AllInOneMarket
             </h1>
             <div className="flex gap-3 items-center">
                 <DataTable
@@ -106,9 +104,7 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ sanitizedProducts }) => {
 
             <section className="flex items-center justify-center space-x-20">
                 {/* <h1 className="font-extrabold bg-gradient-to-tl from-blue-500 to-yellow-400 bg-clip-text text-transparent text-xl"> */}
-                <h1 className="font-extrabold  text-xl">
-                    AllInOneMarket
-                </h1>
+                <h1 className="font-extrabold  text-xl">AllInOneMarket</h1>
                 <DataTable
                     columns={columns}
                     data={sanitizedProducts}
@@ -131,6 +127,12 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ sanitizedProducts }) => {
                     <Link href={"/checkouts"}>
                         <Button size={"icon"} variant={"link"}>
                             <TicketCheck className="size-5 text-neutral-700" />
+                        </Button>
+                    </Link>
+                    <Link href={"/admin"}>
+                        <Button size={"icon"} variant={"link"}>
+                            {" "}
+                            <Lock className="size-5 text-neutral-700" />{" "}
                         </Button>
                     </Link>
                     <Link href={"/account"}>
