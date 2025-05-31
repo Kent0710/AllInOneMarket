@@ -3,14 +3,14 @@
 import AdsCarousel, { AdsCarouselItem } from "@/components/ads-carousel";
 import NoImageFallback from "../../../../public/noimage-fallback.jpg";
 import Image from "next/image";
-import { getSafeImageSrc } from "@/lib/utils";
+import { capitalizeWords, getSafeImageSrc } from "@/lib/utils";
 
 interface CustomizeProductViewProps {
-    selectedVariant: VariantType;
+    // selectedVariant: VariantType;
     product: ProductType;
 }
 const CustomizeProductView: React.FC<CustomizeProductViewProps> = ({
-    selectedVariant,
+    // selectedVariant,
     product,
 }) => {
     return (
@@ -38,23 +38,28 @@ const CustomizeProductView: React.FC<CustomizeProductViewProps> = ({
                     <div className="flex justify-between">
                         <div>
                             <h4 className="text-2xl font-semibold">
-                                {selectedVariant.variantname.includes(
-                                    "Stack"
-                                ) && "Pancake Skewowrz"}
+                                {product.productname.includes("Pancake")
+                                    ? "Pancake Skewowrz"
+                                    : ""}
                             </h4>
                             <p className="text-neutral-500">
                                 {product.description ||
                                     "This product has no description."}
                             </p>
                         </div>
-                        <p className="whitespace-nowrap">
-                            {" "}
-                            {selectedVariant?.sold ?? 0} sold{" "}
-                        </p>
                     </div>
-                    <p className="text-3xl font-semibold text-orange-500 my-3">
-                        ₱{selectedVariant?.price ?? "0"}.00
-                    </p>
+
+                    <div className="flex justify-between items-center">
+                        <p className="text-3xl font-semibold text-orange-500 my-3">
+                            ₱ 60.00
+                        </p>
+                        <p className="whitespace-nowrap">{product.sold} sold</p>
+                    </div>
+
+                    <h5 className=" text-neutral-500 whitespace-nowrap text-center mb-3 font-semibold text-sm">
+                        {" "}
+                        Please customize your pancake below.
+                    </h5>
 
                     <PancakeForm shopId={product.shop.id} />
                 </section>
@@ -95,19 +100,6 @@ const CustomizeProductView: React.FC<CustomizeProductViewProps> = ({
 
 export default CustomizeProductView;
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
     Select,
     SelectContent,
@@ -115,62 +107,47 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { Loader2, Store, TicketCheck } from "lucide-react";
+import { ArrowLeftFromLine, Loader2, Store, TicketCheck } from "lucide-react";
 import { makeCustomizedPancakeOrder } from "@/actions/makeOrder";
-import React from "react";
-import { ProductType, VariantType } from "@/lib/supabase/dbtypes";
+import React, { useState } from "react";
+import {ProductType } from "@/lib/supabase/dbtypes";
 import Link from "next/link";
+import { Card, CardContent } from "@/components/ui/card";
 
-const formSchema = z.object({
-    flavor: z.enum(["vanilla", "chocolate"], {
-        required_error: "Please select a pancake flavor.",
-    }),
-    stack: z.enum(["v-c-v", "c-v-c", "all-vanilla", "all-choco"], {
-        required_error: "Please select a pancake stack combination.",
-    }),
-    fruits: z
-        .array(z.enum(["banana", "mango", "strawberry"]))
-        .max(2, { message: "You can select up to 2 fruits." })
-        .optional(),
-    syrup: z.enum(["chocolate", "strawberry"], {
-        required_error: "Please select a syrup.",
-    }),
-});
-
-export type FormValues = z.infer<typeof formSchema>;
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import ConfirmedCheckout from "@/components/confirmed-checkout";
+import { Label } from "@/components/ui/label";
 
 interface PancakeFormProps {
     shopId: string;
 }
+
+interface FormValues {
+    stack: "v-c-v" | "c-v-c" | "all-vanilla" | "all-choco";
+    flavor: "chocolate" | "vanilla";
+    fruits?: string[];
+    syrup: "chocolate" | "strawberry";
+}
+
 const PancakeForm: React.FC<PancakeFormProps> = ({ shopId }) => {
-    const form = useForm<FormValues>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            flavor: undefined,
-            stack: undefined,
-            fruits: [],
-            syrup: undefined,
-        },
-    });
-
-    const selectedFlavor = form.watch("flavor");
-
     const stackOptions = [
         {
             value: "v-c-v",
-            label:
-                selectedFlavor === "chocolate"
-                    ? "Chocolate - Vanilla - Chocolate"
-                    : "Vanilla - Chocolate - Vanilla",
+            label: "Vanilla - Chocolate - Vanilla",
         },
         {
             value: "c-v-c",
-            label:
-                selectedFlavor === "chocolate"
-                    ? "Vanilla - Chocolate - Vanilla"
-                    : "Chocolate - Vanilla - Chocolate",
+            label: "Chocolate - Vanilla - Chocolate",
         },
         {
             value: "all-vanilla",
@@ -188,200 +165,238 @@ const PancakeForm: React.FC<PancakeFormProps> = ({ shopId }) => {
         { id: "strawberry", label: "Strawberry" },
     ];
 
-    async function onSubmit(values: FormValues) {
-        console.log(values);
-        await makeCustomizedPancakeOrder(values, shopId);
+    const syrupOptions = [
+        { id: "chocolate", label: "Chocolate" },
+        { id: "strawberry", label: "Strawberry" },
+    ];
+
+    const [selectedStack, setSelectedStack] = useState<string>("");
+    const [selectedFruits, setSelectedFruits] = useState<string[]>([]);
+    const [selectedSyrup, setSelectedSyrup] = useState<string>("");
+    const [isOrdering, setIsOrdering] = useState(false);
+    const [orderCode, setOrderCode] = useState<string>("");
+
+    async function handleOrder() {
+        setIsOrdering(true);
+
+        // Structure values for makeCustomizedPancakeOrder
+        const values: FormValues = {
+            stack: selectedStack as FormValues["stack"],
+            flavor: selectedStack.includes("vanilla") ? "vanilla" : "chocolate",
+            fruits: selectedFruits.length > 0 ? selectedFruits : undefined,
+            syrup: selectedSyrup as FormValues["syrup"],
+        };
+
+        try {
+            const result = await makeCustomizedPancakeOrder(values, shopId);
+            if (result.success && result.order) {
+                // Clear state after successful order
+                setSelectedStack("");
+                setSelectedFruits([]);
+                setSelectedSyrup("");
+                setOrderCode(result.order.code);
+            }
+        } catch (error) {
+            console.error("Order failed:", error);
+        } finally {
+            setIsOrdering(false);
+        }
     }
 
     return (
-        <Form {...form}>
-            <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-6 max-w-md mx-auto p-4"
-            >
-                {/* Pancake Flavor */}
-                <FormField
-                    control={form.control}
-                    name="flavor"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Pancake Flavor</FormLabel>
-                            <FormControl>
-                                <RadioGroup
-                                    onValueChange={field.onChange}
-                                    value={field.value}
-                                    className="flex space-x-4"
-                                >
-                                    <FormItem className="flex items-center space-x-2">
-                                        <FormControl>
-                                            <RadioGroupItem value="vanilla" />
-                                        </FormControl>
-                                        <FormLabel className="font-normal">
-                                            Vanilla
-                                        </FormLabel>
-                                    </FormItem>
-                                    <FormItem className="flex items-center space-x-2">
-                                        <FormControl>
-                                            <RadioGroupItem value="chocolate" />
-                                        </FormControl>
-                                        <FormLabel className="font-normal">
-                                            Chocolate
-                                        </FormLabel>
-                                    </FormItem>
-                                </RadioGroup>
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+        <div className="space-y-3">
+            {/* Pancake Stack */}
+            <section>
+                <Label> Pancake Stack Flavor Combination </Label>
+                <Select onValueChange={setSelectedStack} value={selectedStack}>
+                    <SelectTrigger className="w-full bg-white">
+                        <SelectValue placeholder="Select a stack" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {stackOptions.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </section>
 
-                {/* Pancake Stack */}
-                <FormField
-                    control={form.control}
-                    name="stack"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Pancake Stack Combination</FormLabel>
-                            <Select
-                                onValueChange={field.onChange}
-                                value={field.value}
-                            >
-                                <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select a stack" />
-                                    </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    {stackOptions.map((option) => (
-                                        <SelectItem
-                                            key={option.value}
-                                            value={option.value}
-                                        >
-                                            {option.label}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            <FormDescription>
-                                Choose your preferred pancake stack combination.
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+            {/* Fruits */}
+            <section>
+                <Label>Fruits (Optional, up to 2)</Label>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 my-3">
+                    {fruitOptions.map((option) => (
+                        <Card
+                            key={option.id}
+                            className={`py-3 ${
+                                selectedFruits.includes(option.id)
+                                    ? "border border-blue-500 border-dashed"
+                                    : ""
+                            }`}
+                            onClick={() => {
+                                if (selectedFruits.includes(option.id)) {
+                                    setSelectedFruits((fruits) =>
+                                        fruits.filter(
+                                            (fruit) => fruit !== option.id
+                                        )
+                                    );
+                                } else if (selectedFruits.length < 2) {
+                                    setSelectedFruits((fruits) => [
+                                        ...fruits,
+                                        option.id,
+                                    ]);
+                                }
+                            }}
+                        >
+                            <CardContent>
+                                <p className="font-semibold">{option.label}</p>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+                <small className="font-semibold text-neutral-500">
+                    Deselect by reclicking selected fruit
+                </small>
+            </section>
 
-                {/* Fruits */}
-                <FormField
-                    control={form.control}
-                    name="fruits"
-                    render={() => (
-                        <FormItem>
-                            <FormLabel>Fruits (Optional, up to 2)</FormLabel>
-                            {fruitOptions.map((fruit) => (
-                                <FormField
-                                    key={fruit.id}
-                                    control={form.control}
-                                    name="fruits"
-                                    render={({ field }) => {
-                                        return (
-                                            <FormItem
-                                                key={fruit.id}
-                                                className="flex items-center space-x-2"
-                                            >
-                                                <FormControl>
-                                                    <Checkbox
-                                                        checked={field.value?.includes(
-                                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                                            fruit.id as any
-                                                        )}
-                                                        onCheckedChange={(
-                                                            checked
-                                                        ) => {
-                                                            if (
-                                                                checked &&
-                                                                (field.value
-                                                                    ?.length ||
-                                                                    0) >= 2
-                                                            ) {
-                                                                return; // Prevent selecting more than 2
-                                                            }
-                                                            return checked
-                                                                ? field.onChange(
-                                                                      [
-                                                                          ...(field.value ||
-                                                                              []),
-                                                                          fruit.id,
-                                                                      ]
-                                                                  )
-                                                                : field.onChange(
-                                                                      field.value?.filter(
-                                                                          (
-                                                                              value
-                                                                          ) =>
-                                                                              value !==
-                                                                              fruit.id
-                                                                      )
-                                                                  );
-                                                        }}
-                                                    />
-                                                </FormControl>
-                                                <FormLabel className="font-normal">
-                                                    {fruit.label}
-                                                </FormLabel>
-                                            </FormItem>
-                                        );
-                                    }}
-                                />
-                            ))}
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+            {/* Syrup */}
+            <section>
+                <Label>Syrup</Label>
+                <div className="gap-6 grid grid-cols-2 mt-3">
+                    {syrupOptions.map((option) => (
+                        <Card
+                            key={option.id}
+                            className={`py-3 ${
+                                selectedSyrup === option.id &&
+                                "border-blue-500 border border-dashed"
+                            }`}
+                            onClick={() => {
+                                setSelectedSyrup(option.id);
+                            }}
+                        >
+                            <CardContent>
+                                <p className="font-semibold">{option.label}</p>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+            </section>
 
-                {/* Syrup */}
-                <FormField
-                    control={form.control}
-                    name="syrup"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Syrup</FormLabel>
-                            <Select
-                                onValueChange={field.onChange}
-                                value={field.value}
-                            >
-                                <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select a syrup" />
-                                    </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    <SelectItem value="chocolate">
-                                        Chocolate
-                                    </SelectItem>
-                                    <SelectItem value="strawberry">
-                                        Strawberry
-                                    </SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
-                <Button type="submit" disabled={form.formState.isSubmitting}>
-                    {form.formState.isSubmitting ? (
-                        <>
-                            <Loader2 className="animate-spin" />
-                            Making order...
-                        </>
-                    ) : (
-                        <>
-                            <TicketCheck />
-                            Confirm order
-                        </>
-                    )}
+            <div className="flex items-center space-x-3 mt-6">
+                <Button variant="secondary" size={"xl"}>
+                    <ArrowLeftFromLine className="size-5" />
+                    Return
                 </Button>
-            </form>
-        </Form>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button
+                            size="xl"
+                            disabled={
+                                isOrdering || !selectedStack || !selectedSyrup
+                            }
+                        >
+                            <TicketCheck className="size-7" /> Order
+                        </Button>
+                    </DialogTrigger>
+
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle className="text-left w-[80%]">
+                                Pancake Skewowrz
+                            </DialogTitle>
+                            <DialogDescription>
+                                View the details of your order below
+                            </DialogDescription>
+                        </DialogHeader>
+
+                        {orderCode === "" ? (
+                            <>
+                                <div>
+                                    <p className="font-semibold mb-3">
+                                        {" "}
+                                        Pancake Stack Combination{" "}
+                                    </p>
+                                    <Input
+                                        disabled
+                                        placeholder={
+                                            stackOptions.find(
+                                                (opt) =>
+                                                    opt.value === selectedStack
+                                            )?.label ?? "Select a stack"
+                                        }
+                                    />
+                                </div>
+                                <div>
+                                    <p className="font-semibold mb-3">
+                                        {" "}
+                                        Fruits{" "}
+                                    </p>
+                                    <div className="gap-6 grid grid-cols-2">
+                                        {selectedFruits.length > 0 ? (
+                                            selectedFruits.map((fruit) => (
+                                                <Input
+                                                    key={fruit}
+                                                    placeholder={capitalizeWords(
+                                                        fruit
+                                                    )}
+                                                    disabled
+                                                    className="my-3"
+                                                />
+                                            ))
+                                        ) : (
+                                            <p className="text-center text-neutral-500 text-sm">
+                                                No fruit selected.
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                                <div>
+                                    <p className="font-semibold mb-3">Syrup</p>
+                                    <Input
+                                        disabled
+                                        placeholder={capitalizeWords(
+                                            selectedSyrup
+                                        )}
+                                    />
+                                </div>
+                                <div className="flex gap-3 justify-end">
+                                    <DialogClose asChild>
+                                        <Button variant={"outline"}>
+                                            Close Order
+                                        </Button>
+                                    </DialogClose>
+                                    <Button
+                                        onClick={handleOrder}
+                                        disabled={isOrdering ? true : false}
+                                    >
+                                        {isOrdering ? (
+                                            <>
+                                                <Loader2 className="animate-spin" />
+                                                Making order...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <TicketCheck />
+                                                Confirm Order
+                                            </>
+                                        )}
+                                    </Button>
+                                </div>
+                            </>
+                        ) : (
+                            <ConfirmedCheckout
+                                shopName={"dsdasd"}
+                                orderCode={orderCode}
+                                orderQuantity={1}
+                                onClose={() => {
+                                    setOrderCode("");
+                                }}
+                            />
+                        )}
+                    </DialogContent>
+                </Dialog>
+            </div>
+        </div>
     );
 };

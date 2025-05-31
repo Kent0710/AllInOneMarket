@@ -34,7 +34,7 @@ interface CheckoutCardProps {
             />
 
             <section className="flex-1 flex-col items-center md:items-start  flex min-w-[12rem]">
-                <h4 className="text-lg font-semibold whitespace-nowrap">
+                <h4 className="text-lg font-semibold break-normal">
                     {productName} - {variantName} (Variant)
                 </h4>
                 <p className="mb-3 text-blue-600 border-b pb-[0.5px] text-sm w-fit border-blue-600">
@@ -67,7 +67,6 @@ interface CheckoutCardProps {
                         {status}
                     </span>
                 </p>
-                <Button>Mark as claimed</Button>
             </section>
         </div>
     );

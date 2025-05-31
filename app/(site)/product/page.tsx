@@ -3,7 +3,7 @@ import ProductsView from "./products-view";
 
 export default async function ProductsPage() {
     return (
-        <main className="mx-[1rem] md:mx-[5rem]">
+        <main>
             <h2 className="text-center font-semibold text-lg whitespace-nowrap mb-3 text-neutral-700">
                 {" "}
                 Discover amazing items!{" "}

@@ -29,7 +29,9 @@ const Products: React.FC<ProductsProps> = ({
     const products = flattenedProducts || flattenProducts(shopAndProducts);
 
     return (
-        <div className="grid grid-cols-2 gap-3 md:gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+        // <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:gap-6 xl:grid-cols-4 2xl:grid-cols-5"> 
+        <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+         {/* this is lg:grid-cols-5 */}
             {products
                 .filter((product) => typeof product.price === "number")
                 .map((product) => (

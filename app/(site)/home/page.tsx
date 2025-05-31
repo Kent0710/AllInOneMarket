@@ -3,7 +3,7 @@ import HomeView from "./home-view";
 
 export default async function Home() {
     return (
-        <div className="space-y-3 mx-[1rem] md:mx-[5rem]">
+        <div className="space-y-3 mx-[1rem] md:mx-[3rem]">
             <Suspense fallback={<HomeLoading />}>
                 <HomeView />
             </Suspense>

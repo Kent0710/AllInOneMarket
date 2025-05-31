@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const AppFooter = () => {
     return (
-        <footer className="bg-gray-100 text-gray-700 text-sm mt-10 border-t border-gray-200 pb-[7dvh]">
+        <footer className="bg-gray-100 text-gray-700 text-sm mt-10 border-t border-gray-200 pb-[7dvh] md:pb-[0dvh]">
             <div className="max-w-6xl mx-auto px-4 py-8">
                 <ul className="flex flex-wrap justify-center gap-4 md:gap-6 text-xs md:text-sm mb-4">
                     <li>

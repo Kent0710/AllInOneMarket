@@ -16,6 +16,7 @@ import LikeProduct from "./like-product";
 import ShareProduct from "./share-product";
 import { useState } from "react";
 import LoadingDots from "./loader";
+import { useSelectedVariantStore } from "@/store/useSelectedVariantStore";
 
 interface ProductCardProps {
     productId: string;
@@ -43,20 +44,22 @@ const ProductCard: React.FC<ProductCardProps> = ({
     initialLiked,
 }) => {
     const [isClicked, setIsClicked] = useState(false);
+    const { setSelectedVariant } = useSelectedVariantStore();
 
     return (
         <Card
-            className={`w-[11.5rem] border border-white md:w-[16.5rem] py-3  h-[29rem] md:h-[35rem] bg-white/40 backdrop-blur-3xl ${
+            className={`w-full border border-white py-3  h-full bg-white/40 backdrop-blur-3xl ${
                 isClicked && "bg-neutral-200/50"
             }`}
         >
             {!isClicked ? (
                 <div className="flex flex-col justify-between h-full">
                     <Link
-                        href={`/product/${productId}?variant=${toLowerCaseHelper(
-                            variantName
-                        )}`}
-                        onClick={() => setIsClicked(true)}
+                        href={`/product/${productId}`}
+                        onClick={() => {
+                            setIsClicked(true);
+                            setSelectedVariant("");
+                        }}
                     >
                         <CardHeader>
                             <div className="flex items-center gap-1 md:gap-3">

@@ -49,7 +49,7 @@ const HomeView = async () => {
                 className="w-full  h-[30dvh] md:h-[40dvh] lg:h-[70dvh] object-cover rounded-xl"
             />
 
-            <section className="py-6 border-b ">
+            <section className="py-6 border-b">
                 <div className="flex flex-col justify-center  mb-10">
                     <h2 className="text-center font-semibold  text-xl">
                         Your Next Favorite Finds

@@ -17,11 +17,12 @@ const AppHeader = () => {
         flattenedProducts
     )
         ? flattenedProducts
-              .filter((item) => item?.isVariant === true)
+              .filter((product) => typeof product.price === "number")
               .map((item) => ({
-                  id: item.id, // Use item.id instead of product_id
+                  id: item.id, 
                   shop: item.shopname,
-                  variantname: item.variantname || "",
+                  variantname: item.variantname.includes('Stack') ? 'Pancake Skewowrz' : item.variantname ,
+                  parent_id: item.parent_product_id,
               }))
         : [];
 
@@ -50,7 +51,7 @@ interface MobileHeaderProps {
 }
 const MobileHeader: React.FC<MobileHeaderProps> = ({ sanitizedProducts }) => {
     return (
-        <header className="flex flex-wrap  md:flex-nowrap md:gap-0 justify-center border-b py-2 items-center pt-4 bg-blue-400 shadow-lg rounded-b-xl ">
+        <header className="flex flex-wrap justify-around border-b py-2 gap-0 sm:gap-6 items-center pt-4 bg-gradient-to-t from-fuchsia-500 to-cyan-500 shadow-lg rounded-b-xl ">
             {/* <h1 className="font-extrabold bg-gradient-to-tl from-blue-500 to-yellow-500 bg-clip-text text-transparent md:text-md"> */}
             <h1 className="font-extrabold text-xl md:text-md text-white">
                 AllInOneMarket
@@ -78,7 +79,7 @@ interface DesktopHeaderProps {
 }
 const DesktopHeader: React.FC<DesktopHeaderProps> = ({ sanitizedProducts }) => {
     return (
-        <header className="py-8 bg-blue-400 rounded-b-3xl shadow-lg text-white">
+        <header className="py-8 bg-gradient-to-t from-fuchsia-500 to-cyan-500 rounded-b-3xl shadow-lg text-white">
             <ul className="flex space-x-6 text-xs justify-center">
                 <li>
                     <Link href={"/home"}>Home</Link>
@@ -102,13 +103,13 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ sanitizedProducts }) => {
                 <li>Contact</li>
             </ul>
 
-            <section className="flex items-center justify-center space-x-20">
+            <section className="flex items-center justify-center space-x-3 lg:space-x-12 flex-wrap">
                 {/* <h1 className="font-extrabold bg-gradient-to-tl from-blue-500 to-yellow-400 bg-clip-text text-transparent text-xl"> */}
-                <h1 className="font-extrabold  text-xl">AllInOneMarket</h1>
+                <h1 className="font-extrabold text-xl ">AllInOneMarket</h1>
                 <DataTable
                     columns={columns}
                     data={sanitizedProducts}
-                    inputClassName="w-[40rem]"
+                    inputClassName="w-[20dvw] md:w-[35dvw] lg:w-[40dvw] xl:w-[40dvw]"
                     tableClassName="w-[40rem] text-neutral-700"
                     searchColumn="variantname"
                     href={true}

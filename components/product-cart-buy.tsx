@@ -2,7 +2,9 @@
 
 import React, { useState } from "react";
 import { Button } from "./ui/button";
-import { Heart, Loader2, ShoppingBag, TicketCheck } from "lucide-react";
+import { ArrowLeftFromLine,  Loader2, ShoppingBag, TicketCheck } from "lucide-react";
+import { useSelectedVariantStore } from "@/store/useSelectedVariantStore";
+import VariantCard from "./variant-card";
 import {
     Dialog,
     DialogClose,
@@ -29,25 +31,42 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useProductStore } from "@/store/useProductStore";
 import { getShopAndProducts } from "@/actions/getShopAndProducts";
-import { flattenProducts } from "@/lib/utils";
-
+import { flattenProducts, toLowerCaseHelper } from "@/lib/utils";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import ConfirmedCheckout from "./confirmed-checkout";
+import { ProductWithVariantsType, VariantType } from "@/lib/supabase/dbtypes";
 interface ProductCartBuyProps {
-    variantName: string;
     productName: string;
     shopName: string;
     shopId: string;
     productId: string;
-    variantId: string;
+    product: ProductWithVariantsType;
 }
 
 const ProductCartBuy: React.FC<ProductCartBuyProps> = ({
-    variantName,
     productName,
     shopName,
     shopId,
     productId,
-    variantId,
+    product,
 }) => {
+    const { selectedVariant, setSelectedVariant } = useSelectedVariantStore();
+
+    const selectedVariantData: VariantType = product.variants.find(
+        (v: { variantname: string }) =>
+            toLowerCaseHelper(v.variantname) ===
+            toLowerCaseHelper(selectedVariant)
+    ) || {
+        id: "",
+        variantname: "",
+        price: 0,
+        variantimage: "",
+        product_id: "",
+        quantity: 0,
+        sold: 0,
+        variant_images: [],
+    };
+
     const router = useRouter();
     const [quantity, setQuantity] = useState(1);
     const [isCheckoutConfirmed, setIsCheckoutConfirmed] = useState(false);
@@ -60,61 +79,106 @@ const ProductCartBuy: React.FC<ProductCartBuyProps> = ({
         setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
     };
 
+    const usedImages = new Set<string>();
+
     return (
-        <div className="flex flex-col space-y-6">
-            <div className="flex items-center gap-10">
-                <h5 className="text-neutral-500 mb-1">Quantity</h5>
-                <div className="flex items-center space-x-2">
-                    <Button variant="outline" onClick={decreaseQuantity}>
-                        -
+        <>
+            <div className="flex justify-between items-center mb-6">
+                <p className="text-3xl font-semibold text-orange-500 my-3">
+                    ₱ {selectedVariantData ? selectedVariantData.price : 0}.00
+                </p>
+                <p className="whitespace-nowrap">
+                    {selectedVariantData ? selectedVariantData.sold : 0} sold
+                </p>
+            </div>
+            <div className="grid grid-cols-1 2xl:grid-cols-2 gap-10 mb-6 ">
+                <h5 className=" text-neutral-500 whitespace-nowrap">
+                    {" "}
+                    Please select your preferred variant{" "}
+                </h5>
+                <ScrollArea className=" w-full h-[10rem] pr-6" type="always">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {product.variants.map((variant: VariantType) => {
+                            const img0 = variant.variant_images[0];
+                            const img1 = variant.variant_images[1];
+                            const imageToUse =
+                                usedImages.has(img0) && img1 ? img1 : img0;
+                            usedImages.add(imageToUse);
+
+                            return (
+                                <VariantCard
+                                    key={variant.id}
+                                    image={imageToUse}
+                                    variantname={variant.variantname}
+                                    selectedVariantName={selectedVariant}
+                                    setSelectedVariantName={setSelectedVariant}
+                                />
+                            );
+                        })}
+                    </div>
+                </ScrollArea>
+            </div>
+            <div className="flex flex-col space-y-6">
+                <div className="flex items-center gap-10">
+                    <h5 className="text-neutral-500 mb-1">Quantity</h5>
+                    <div className="flex items-center space-x-2">
+                        <Button variant="outline" onClick={decreaseQuantity}>
+                            -
+                        </Button>
+                        <span className="px-4">{quantity}</span>
+                        <Button variant="outline" onClick={increaseQuantity}>
+                            +
+                        </Button>
+                    </div>
+                </div>
+                <div className="flex space-x-3 items-center">
+                    <Button variant="secondary" size={"xl"}>
+                        <ArrowLeftFromLine className="size-5" />
+                        Return
                     </Button>
-                    <span className="px-4">{quantity}</span>
-                    <Button variant="outline" onClick={increaseQuantity}>
-                        +
-                    </Button>
+                    <Dialog
+                        onOpenChange={(open) => {
+                            if (!open && isCheckoutConfirmed) {
+                                router.push("/checkouts");
+                            }
+                        }}
+                    >
+                        <DialogTrigger asChild>
+                            <Button
+                                size={"xl"}
+                                disabled={selectedVariant ? false : true}
+                            >
+                                <ShoppingBag className="size-7" />
+                                Order
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle className="text-left w-[80%]">
+                                    {productName} - {selectedVariant} (Variant)
+                                    Checkout
+                                </DialogTitle>
+                                <DialogDescription className="text-left">
+                                    View the details of your order below.
+                                </DialogDescription>
+                                <CheckoutForm
+                                    quantity={quantity}
+                                    variantName={selectedVariant}
+                                    productName={productName}
+                                    shopName={shopName}
+                                    shopId={shopId}
+                                    productId={productId}
+                                    variantId={selectedVariantData.id}
+                                    setIsCheckoutConfirmed={
+                                        setIsCheckoutConfirmed
+                                    }
+                                />
+                            </DialogHeader>
+                        </DialogContent>
+                    </Dialog>
                 </div>
             </div>
-            <div className="flex space-x-3">
-                <Button variant="outline" size={"xl"}>
-                    <Heart className="size-7" />
-                    Like
-                </Button>
-                <Dialog
-                    onOpenChange={(open) => {
-                        if (!open && isCheckoutConfirmed) {
-                            router.push("/checkouts");
-                        }
-                    }}
-                >
-                    <DialogTrigger asChild>
-                        <Button size={"xl"}>
-                            <ShoppingBag className="size-7" />
-                            Order
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle className="text-left w-[80%]">
-                                {productName} - {variantName} (Variant) Checkout
-                            </DialogTitle>
-                            <DialogDescription className="text-left">
-                                View the details of your order below.
-                            </DialogDescription>
-                            <CheckoutForm
-                                quantity={quantity}
-                                variantName={variantName}
-                                productName={productName}
-                                shopName={shopName}
-                                shopId={shopId}
-                                productId={productId}
-                                variantId={variantId}
-                                setIsCheckoutConfirmed={setIsCheckoutConfirmed}
-                            />
-                        </DialogHeader>
-                    </DialogContent>
-                </Dialog>
-            </div>
-        </div>
+        </>
     );
 };
 
@@ -155,8 +219,11 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
         },
     });
 
-    const [order, setOrder] = useState({});
-    const {  setFlattenedProducts } = useProductStore();
+    const [order, setOrder] = useState({
+        code : '',
+        quantity : 0,
+    });
+    const { setFlattenedProducts } = useProductStore();
 
     const onSubmit = async () => {
         const order = await makeOrder({
@@ -192,7 +259,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
 
     return (
         <>
-            {Object.keys(order).length === 0 ? (
+            {order.quantity === 0 && order.code === '' ? (
                 <Form {...form}>
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
@@ -253,60 +320,14 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                     </form>
                 </Form>
             ) : (
-                <ConfirmedCheckout shopName={shopName} order={order} onClose={handleDialogClose} />
+                <ConfirmedCheckout
+                    shopName={shopName}
+                    orderCode={order.code}
+                    orderQuantity={order.quantity}
+                    onClose={handleDialogClose}
+                />
             )}
         </>
-    );
-};
-
-interface ConfirmedCheckoutProps {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    order: any;
-    onClose: () => void;
-    shopName : string;
-}
-
-export const ConfirmedCheckout: React.FC<ConfirmedCheckoutProps> = ({
-    order,
-    onClose,
-    shopName
-}) => {
-    return (
-        <div className="flex flex-col justify-center items-center">
-            <iframe src="https://lottie.host/embed/22e47dc9-b392-42fe-bc19-52fc1f553875/xSYbX5Kr6G.lottie"></iframe>
-            <h4 className="font-semibold text-2xl"> Congratulations! </h4>
-            <p className="text-neutral-500">
-                You have successfully made your order.
-            </p>
-
-            <h5 className="font-extrabold text-5xl mt-6 mb-3 text-blue-600">
-                {order.code}
-            </h5>
-            <p className="text-neutral-500 w-[20rem] text-center">
-                Please present this to{" "}
-                <span className="text-blue-600 font-bold">
-                    {shopName}
-                </span>{" "}
-                <br />
-                at the{" "}
-                <span className="font-bold text-blue-600">Ground Floor.</span>
-            </p>
-
-            <section className="mt-6 flex justify-center gap-6 flex-wrap text-center border-t pt-6">
-                <p className="text-xs">
-                    Quantity:{" "}
-                    <span className="font-semibold underline cursor-not-allowed">
-                        {order.quantity}
-                    </span>
-                </p>
-            </section>
-
-            <DialogClose asChild>
-                <Button variant="outline" className="mt-6" onClick={onClose}>
-                    Close
-                </Button>
-            </DialogClose>
-        </div>
     );
 };
 

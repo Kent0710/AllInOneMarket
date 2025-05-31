@@ -42,13 +42,14 @@ const AccountTabContent: React.FC<AccountTabContentProps> = async ({
     return (
         <div className="mt-6">
             <h4>
-                <span className="font-semibold">Email: </span>{" "}
-                {user?.user_metadata.email ||
-                    user?.email ||
+                <span className="font-semibold">Username: </span>{" "}
+                {user?.user_metadata.email.replace('@gmail.com', '') ||
+                    user?.email?.replace('@gmail.com', '') ||
                     "No email available"}
             </h4>
 
-            <section className="flex justify-center gap-6 flex-wrap m-10 border p-10 rounded-xl">
+            <p className="text-sm font-semibold text-neutral-500 text-center my-3"> Your Checkouts </p>
+            <section className="flex justify-center gap-6 flex-wrap  border rounded-xl">
                 {orders.length === 0 ? (
                     <> No orders </>
                 ) : (

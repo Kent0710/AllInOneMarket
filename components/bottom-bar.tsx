@@ -71,7 +71,7 @@ const BottomBar = () => {
     if (!isMobile) return null;
 
     return (
-        <div className="fixed bottom-0 left-0 w-full rounded-t-3xl bg-gradient-to-r from-indigo-500 to-blue-500 text-white mt-2 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] border-t border-neutral-300 z-50 h-[4rem]">
+        <div className="fixed bottom-0 left-0 w-full rounded-t-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 text-white mt-2 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] border-t border-neutral-300 z-50 h-[4rem]">
             <nav className="h-full flex items-center">
                 <ul className="flex justify-around mx-6 w-full items-center ">
                     {navs.map((nav) => (
@@ -157,7 +157,6 @@ const Menu = () => {
     useEffect(()=>{
         async function getUsername() {
             const username = await getUsernameFromCookies();
-            console.log(username);
             setUsername(username);
         };
 

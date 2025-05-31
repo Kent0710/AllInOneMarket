@@ -23,8 +23,8 @@ import {
 import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { toLowerCaseHelper } from "@/lib/utils";
 import { FlattenedProductType } from "@/lib/supabase/dbtypes";
+import { useSelectedVariantStore } from "@/store/useSelectedVariantStore";
 
 export type Result = {
     id: string;
@@ -50,7 +50,9 @@ export const columns: ColumnDef<FlattenedProductType>[] = [
         accessorKey: "name",
         header: "Name",
         cell: ({ row }) =>
-            (row.original.productname || row.original.parent_productname || "Unnamed") +
+            (row.original.productname ||
+                row.original.parent_productname ||
+                "Unnamed") +
             (row.original.variantname ? ` - ${row.original.variantname}` : ""),
     },
     {
@@ -60,7 +62,10 @@ export const columns: ColumnDef<FlattenedProductType>[] = [
     },
 ];
 
-interface DataTableProps<TData extends { id: string; variantname?: string }, TValue> {
+interface DataTableProps<
+    TData extends { id: string; variantname?: string, parent_id? : string },
+    TValue
+> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     inputClassName?: string;
@@ -71,7 +76,10 @@ interface DataTableProps<TData extends { id: string; variantname?: string }, TVa
     href?: boolean;
 }
 
-export default function DataTable<TData extends { id: string; variantname?: string }, TValue>({
+export default function DataTable<
+    TData extends { id: string; variantname?: string, parent_id? : string },
+    TValue
+>({
     columns,
     data,
     inputClassName,
@@ -82,6 +90,7 @@ export default function DataTable<TData extends { id: string; variantname?: stri
     href = false,
 }: DataTableProps<TData, TValue>) {
     const router = useRouter();
+    const { setSelectedVariant } = useSelectedVariantStore();
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [isSearching, setIsSearching] = useState(searching);
@@ -180,11 +189,9 @@ export default function DataTable<TData extends { id: string; variantname?: stri
                                                 key={cell.id}
                                                 onClick={() => {
                                                     if (href) {
-                                                        const variantParam = row.original.variantname
-                                                            ? `?variant=${toLowerCaseHelper(row.original.variantname)}`
-                                                            : "";
+                                                        setSelectedVariant(row.original.variantname || '')
                                                         router.push(
-                                                            `/product/${row.original.id}${variantParam}`
+                                                            `/product/${row.original.parent_id}`
                                                         );
                                                     }
                                                 }}
