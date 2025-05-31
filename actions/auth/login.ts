@@ -47,7 +47,6 @@ export async function signup(values: z.infer<typeof authFormSchema>) {
     }
 
     // cookies logic for username
-    let cookieFlag = false; // tell us if there is a need to reassign cookie value
     const cookieStore = await cookies();
     // check cookies
     const username = cookieStore.get("username");

@@ -91,9 +91,6 @@ import React from "react";
 import { getOrders } from "@/actions/getOrders";
 import TableRowForm from "./tablerow-form";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Terminal } from "lucide-react";
-
 interface ShopTabContentProps {
     user: ExtendedUserType | null;
 }
@@ -121,15 +118,6 @@ const ShopTabContent: React.FC<ShopTabContentProps> = ({ user }) => {
 
     return (
         <div className="flex flex-col gap-12">
-            <Alert>
-                <Terminal className="h-4 w-4" />
-                <AlertTitle>About the images</AlertTitle>
-                <AlertDescription>
-                    For policy purposes in development, uploading of images is turned off. 
-                    Send your images via google drive.
-                </AlertDescription>
-            </Alert>
-
             <div className="flex gap-3 items-center flex-col">
                 <h2 className="text-center font-extrabold text-lg whitespace-nowrap mb-3">
                     Shop

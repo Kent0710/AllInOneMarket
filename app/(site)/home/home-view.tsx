@@ -1,8 +1,5 @@
 import Products from "@/components/products";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Terminal } from "lucide-react";
-
 import { getShopAndProducts } from "@/actions/getShopAndProducts";
 import { getLikeStatuses } from "@/actions/likeProduct";
 import {
@@ -25,14 +22,6 @@ const HomeView = async () => {
 
     return (
         <>
-            <Alert>
-                <Terminal className="h-4 w-4" />
-                <AlertTitle> Under development </AlertTitle>
-                <AlertDescription>
-                    The app is still under development. Minor bugs in features and layouting is may occur. 
-                </AlertDescription>
-            </Alert>
-
             <Image
                 src={SampleHeader}
                 alt="sampleheader"

@@ -1,29 +1,55 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Home } from "lucide-react";
-
-export default async function ContactPage() {
+export default function ContactPage() {
     return (
-        <div className="flex justify-center items-center mt-6">
-            <div className="border shadow-md p-10 rounded-xl flex flex-col items-center">
-                <section>
-                    <iframe src="https://lottie.host/embed/478c583f-291b-4c2d-abee-3a6b3e871546/y9P9pf8JsI.lottie"></iframe>
-                </section>
-                <h1 className="text-2xl font-bold text-neutral-700">
-                    {" "}
-                    This page is under development{" "}
-                </h1>
-                <p className="text-sm text-neutral-500">
-                    {" "}
-                    Kindly redirect to home for the app experience.{" "}
+        <main className="max-w-3xl mx-auto px-4 text-neutral-800">
+            <h1 className="text-4xl font-bold mb-6">Contact Us</h1>
+
+            <p className="mb-4 text-sm text-neutral-500">
+                We&apos;re here to help! Whether you have questions about your reservation,
+                issues at the venue, or just general feedback, feel free to reach out.
+            </p>
+
+            <section className="space-y-6">
+                <h2 className="text-2xl font-semibold">Customer Support</h2>
+                <p>
+                    For any questions or problems with your reservation, code, or experience
+                    with one of our six shops, our support team is ready to assist you.
                 </p>
-                <Link href={"/home"}>
-                    <Button variant={"special"} className="mt-6">
-                        {" "}
-                        <Home /> Go to home{" "}
-                    </Button>
-                </Link>
-            </div>
-        </div>
+                <p>
+                    📩 Email us at{" "}
+                    <a
+                        href="mailto:chls.softwaredev@gmail.com"
+                        className="text-blue-600 underline"
+                    >
+                        chls.softwaredev@gmail.com
+                    </a>
+                </p>
+
+                <h2 className="text-2xl font-semibold">Business or Vendor Inquiries</h2>
+                <p>
+                    Are you a shop owner or school event organizer looking to collaborate
+                    with AllInOneMarket? Reach out — we&apos;d love to hear from you.
+                </p>
+                <p>
+                    📩 Email us at{" "}
+                    <a
+                        href="mailto:chls.softwaredev@gmail.com"
+                        className="text-blue-600 underline"
+                    >
+                        chls.softwaredev@gmail.com
+                    </a>
+                </p>
+
+                <h2 className="text-2xl font-semibold">Feedback & Suggestions</h2>
+                <p>
+                    Help us improve! If you have any feedback, ideas, or suggestions to make
+                    the AllInOneMarket experience better, drop us a message anytime.
+                </p>
+
+                <p className="mt-8 text-sm text-neutral-500">
+                    We aim to respond within 24 - 48 hours. Thank you for supporting
+                    AllInOneMarket!
+                </p>
+            </section>
+        </main>
     );
 }

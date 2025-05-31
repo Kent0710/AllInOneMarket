@@ -1,19 +1,18 @@
-// app/privacy/page.tsx (or pages/privacy.tsx for older Next.js versions)
 export default function PrivacyPolicyPage() {
     return (
-        <main className="max-w-3xl mx-auto px-4  text-neutral-800">
+        <main className="max-w-3xl mx-auto px-4 text-neutral-800">
             <h1 className="text-4xl font-bold mb-6">Privacy Policy</h1>
 
             <p className="mb-4 text-sm text-neutral-500">
-                Last updated: May 10, 2025
+                Last updated: May 31, 2025
             </p>
 
             <section className="space-y-6">
                 <p>
-                    Thank you for trusting us with your information. Your
-                    privacy matters, and we&apos;re committed to protecting it. This
-                    Privacy Policy explains how we collect, use, and protect
-                    your data when you use our services.
+                    Thank you for trusting AllInOneMarket. Your privacy is important to us,
+                    and we are committed to protecting your personal information. This Privacy Policy
+                    explains how we collect, use, and safeguard your data when using our platform
+                    to explore, reserve, and redeem items from our six shop vendors.
                 </p>
 
                 <h2 className="text-2xl font-semibold">
@@ -21,16 +20,19 @@ export default function PrivacyPolicyPage() {
                 </h2>
                 <ul className="list-disc list-inside space-y-1">
                     <li>
-                        <strong>Account Info:</strong> Like your name, email,
-                        and preferences.
+                        <strong>Account Info:</strong> Such as your name, email address, and other
+                        necessary details when reserving an order.
                     </li>
                     <li>
-                        <strong>Usage Data:</strong> Pages visited, actions
-                        taken, device info, etc.
+                        <strong>Reservation Data:</strong> Information about the orders you reserve,
+                        including selected shop, items, and generated reservation codes.
                     </li>
                     <li>
-                        <strong>Optional Data:</strong> Any details you choose
-                        to share with us voluntarily.
+                        <strong>Usage Data:</strong> Device information, pages visited, and actions
+                        taken on the platform.
+                    </li>
+                    <li>
+                        <strong>Optional Data:</strong> Any additional information you voluntarily provide.
                     </li>
                 </ul>
 
@@ -39,58 +41,56 @@ export default function PrivacyPolicyPage() {
                 </h2>
                 <p>We use your data to:</p>
                 <ul className="list-disc list-inside space-y-1">
-                    <li>Provide and improve our services</li>
-                    <li>Personalize your experience</li>
-                    <li>Ensure security and prevent abuse</li>
-                    <li>Send updates or service notifications</li>
+                    <li>Process your shop reservations and generate verification codes</li>
+                    <li>Improve the user experience and platform performance</li>
+                    <li>Prevent misuse and enhance security</li>
+                    <li>Notify you about your reservation status or platform updates</li>
                 </ul>
 
                 <h2 className="text-2xl font-semibold">3. Data Sharing</h2>
-                <p>We never sell your data. We only share it when:</p>
+                <p>We do not sell your data. We only share information:</p>
                 <ul className="list-disc list-inside space-y-1">
-                    <li>Required by law</li>
-                    <li>
-                        Using trusted third-party services to operate our
-                        platform
-                    </li>
+                    <li>With the shop vendors involved in your reservation</li>
+                    <li>As required by law or legal requests</li>
+                    <li>With trusted service providers that help us operate the platform securely</li>
                 </ul>
 
                 <h2 className="text-2xl font-semibold">4. Your Rights</h2>
                 <p>
-                    You have the right to access, update, or delete your data.
-                    You can also request to opt out of certain communications.
+                    You have the right to access, correct, or delete your personal data.
+                    You may also opt out of receiving notifications that are not essential
+                    to your reservation.
                 </p>
 
                 <h2 className="text-2xl font-semibold">5. Data Security</h2>
                 <p>
-                    We use encryption, secure servers, and modern safeguards to
-                    protect your data from unauthorized access.
+                    We implement security measures such as encryption and secure servers
+                    to protect your data from unauthorized access or misuse.
                 </p>
 
                 <h2 className="text-2xl font-semibold">6. Cookies</h2>
                 <p>
-                    Our site may use cookies to improve your experience. You can
-                    manage cookie preferences through your browser settings.
+                    We use cookies to enhance your browsing experience. You can control
+                    or disable cookies through your browser settings.
                 </p>
 
                 <h2 className="text-2xl font-semibold">
                     7. Changes to This Policy
                 </h2>
                 <p>
-                    We may update this policy to reflect new practices or
-                    regulations. We’ll notify you of significant changes by
-                    updating the date above.
+                    We may update this Privacy Policy as our services evolve or as laws change.
+                    Any major updates will be reflected by updating the &quot;Last updated&quot; date above.
                 </p>
 
                 <h2 className="text-2xl font-semibold">8. Contact Us</h2>
                 <p>
-                    If you have any questions or concerns, feel free to reach us
-                    at{" "}
+                    If you have any questions or concerns regarding this Privacy Policy,
+                    feel free to contact us at{" "}
                     <a
-                        href="mailto:support@example.com"
+                        href="mailto:chls.softwaredev@gmail.com"
                         className="text-blue-600 underline"
                     >
-                        support@example.com
+                        chls.softwaredev@gmail.com
                     </a>
                     .
                 </p>

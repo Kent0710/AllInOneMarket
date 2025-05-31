@@ -19,9 +19,11 @@ const AppHeader = () => {
         ? flattenedProducts
               .filter((product) => typeof product.price === "number")
               .map((item) => ({
-                  id: item.id, 
+                  id: item.id,
                   shop: item.shopname,
-                  variantname: item.variantname.includes('Stack') ? 'Pancake Skewowrz' : item.variantname ,
+                  variantname: item.variantname.includes("Stack")
+                      ? "Pancake Skewowrz"
+                      : item.variantname,
                   parent_id: item.parent_product_id,
               }))
         : [];
@@ -93,14 +95,18 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ sanitizedProducts }) => {
                 <Link href={"/likes"}>
                     <li>Likes</li>
                 </Link>
-                <li>About</li>
+                <Link href={"/about"}>
+                    <li>About</li>
+                </Link>
                 <Link href={"/terms"}>
                     <li>Terms</li>
                 </Link>
                 <Link href={"/privacy"}>
                     <li>Privacy</li>
                 </Link>
-                <li>Contact</li>
+                <Link href={"/contact"}>
+                    <li>Contact</li>
+                </Link>
             </ul>
 
             <section className="flex items-center justify-center space-x-3 lg:space-x-12 flex-wrap">
